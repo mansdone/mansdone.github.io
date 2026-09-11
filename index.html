@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mohammed Jawwaad Sheriff</title>
+<meta name="description" content="Software engineer, PES University class of 2027. Ground-station tracking software, ML pipelines audited end to end, and a live view of the satellites over my university's dish.">
+<meta name="author" content="Mohammed Jawwaad Sheriff">
+<meta property="og:title" content="Mohammed Jawwaad Sheriff">
+<meta property="og:description" content="I build systems, then I go looking for where they're wrong.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#e8eceb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b141a" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Chivo+Mono:wght@400;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // apply a saved theme before first paint
+  try { var t = localStorage.getItem("mjs-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="bar__name" href="#top">Jawwaad Sheriff</a>
+    <div class="bar__live" aria-label="Ground station status">
+      <span class="bar__coords"><i class="dot dot--live" aria-hidden="true"></i>PES GS 12.9500°N 77.6670°E 888&nbsp;m</span>
+      <span><time id="bar-clock" class="num">--:--:--</time><span class="bar__tz">&nbsp;IST</span></span>
+      <span class="bar__next" id="bar-next">Predicting passes…</span>
+    </div>
+    <nav aria-label="Sections">
+      <a href="#findings">Findings</a>
+      <a href="#work">Work</a>
+      <a href="#log" class="nav-extra">Log</a>
+      <a href="#contact">Contact</a>
+      <button class="bar__theme" id="theme-toggle" type="button" aria-label="Switch colour theme">Night</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================================================================ HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero__text">
+      <div class="hero__id">
+        <p class="hero__name">Mohammed Jawwaad Sheriff</p>
+        <p class="label">Software engineer · Bengaluru · PES University, class of 2027</p>
+      </div>
+      <h1>I build systems, then I go looking for <span class="hl hl--draw">where they’re wrong.</span></h1>
+      <p class="hero__lede">I’ve written the software that points a 3.7-metre dish at satellites, caught a neural network giving the same answer to every input, and scored a speech model on all 4,056 test clips rather than a convenient sample.</p>
+      <p class="hero__avail">Final year of Computer Science. Looking for a full-time SDE, backend or ML role from 2027 — and internships before then.</p>
+      <div class="hero__actions">
+        <a class="btn" href="#findings">What I’ve caught <span aria-hidden="true">↓</span></a>
+        <a class="link-arrow" href="assets/Mohammed_Jawwaad_Sheriff_Resume.pdf">Résumé, PDF</a>
+        <a href="mailto:jawwaadsheriff@gmail.com">jawwaadsheriff@gmail.com</a>
+      </div>
+    </div>
+
+    <aside class="sky" aria-labelledby="sky-title">
+      <div class="sky__head">
+        <p class="sky__title" id="sky-title">Overhead now, PES University</p>
+        <p class="sky__count" id="sky-count">Computing…</p>
+      </div>
+      <div class="sky__plot">
+        <canvas id="sky-canvas" role="img" aria-label="Polar sky plot of the ground station's tracked satellites currently above the horizon"></canvas>
+        <div class="sky__tip" id="sky-tip" hidden></div>
+      </div>
+      <div class="sky__legend" aria-hidden="true">
+        <span><i class="key key--up"></i>Trackable</span>
+        <span><i class="key key--low"></i>Up, below the floor</span>
+        <span><i class="key key--floor"></i>Under 25°: the dish won’t go</span>
+        <span><i class="key key--stop"></i>Cable stop, north</span>
+      </div>
+      <div class="passes">
+        <table>
+          <caption class="label">Next passes over the station</caption>
+          <thead><tr><th scope="col">Satellite</th><th scope="col">Rises, IST</th><th scope="col">In</th><th scope="col" class="r">Max el</th></tr></thead>
+          <tbody id="pass-rows"><tr><td colspan="4">Predicting passes…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="sky__note">Positions are propagated in your browser with SGP4 from <span id="tle-age">the station’s element sets</span>. No web service is asked where these satellites are — the same rule the station dashboard follows.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ================================================================ FINDINGS -->
+<section class="sec" id="findings" aria-labelledby="findings-h">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Findings</span>
+      <p>Six numbers. Each one changed what shipped.</p>
+    </div>
+    <div class="sec__main">
+      <h2 id="findings-h">Most of my best work started as a number that didn’t add up.</h2>
+
+      <ol class="findings">
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">191°</span><span class="finding__what">Azimuth error on one pass</span></p>
+          <p class="finding__story">The predicted pass pointed the dish almost the opposite way. Gpredict’s bundled database was still carrying a METEOR-M2 element set from 2018. Now every tracked satellite is refreshed from SatNOGS before the tracker ever sees it.</p>
+          <a class="finding__src" href="#case-station">Ground station</a>
+        </li>
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">1.000</span><span class="finding__what">Spearman, “fused” model vs. XGBoost alone</span></p>
+          <p class="finding__story">Our capstone’s multimodal model ranked every sample exactly the way its XGBoost branch did. Running the saved CNN as a black box showed why: it returned a byte-identical vector for every input it was given.</p>
+          <a class="finding__src" href="#case-wildfire">Wildfire</a>
+        </li>
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">20→56%</span><span class="finding__what">Positive rate, after one join</span></p>
+          <p class="finding__story">A left join copied each weather row once per satellite fire detection, and the headline accuracy rose with it. De-duplicated, the model scores 89.9% against an 85.0% baseline, with ROC-AUC 0.907. A smaller claim, and one I can defend.</p>
+          <a class="finding__src" href="#case-wildfire">Wildfire</a>
+        </li>
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">1 day</span><span class="finding__what">Launch-date error on two satellites</span></p>
+          <p class="finding__story">Cross-checking all 47 tracked satellites between SatNOGS and CelesTrak turned up two Chinese launches logged in Beijing time instead of UTC, and seven missing dates. Launch dates now come from CelesTrak, names and frequencies from SatNOGS, and neither is trusted outside its strength.</p>
+          <a class="finding__src" href="#case-station">Ground station</a>
+        </li>
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">0.001°</span><span class="finding__what">Agreement, three orbit calculations</span></p>
+          <p class="finding__story">The dashboard, Gpredict, and a second SGP4 implementation I wrote with the coordinate transform done by hand all land within a thousandth of a degree. Getting there meant matching the station’s coordinates to the fourth decimal place.</p>
+          <a class="finding__src" href="#case-station">Ground station</a>
+        </li>
+        <li class="finding">
+          <p class="finding__fig"><span class="hl">4,056</span><small>/4,056</small><span class="finding__what">Test clips scored</span></p>
+          <p class="finding__story">My Urdu speech model was evaluated on the entire Common Voice 17 test split, not a sample of it: 34.6% word error rate, 11.5% character error rate. The model is public, so anyone can re-run the number.</p>
+          <a class="finding__src" href="#case-asr">Urdu ASR</a>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ WORK -->
+<section class="sec" id="work" aria-labelledby="work-h">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Work</span>
+      <p>Five systems. For each: the problem, what I built, and what I checked.</p>
+    </div>
+    <div class="sec__main">
+      <h2 id="work-h">The work, and how I know it works.</h2>
+
+      <!-- Ground station -->
+      <article class="case" id="case-station" aria-labelledby="station-h">
+        <div class="case__kicker label"><span>Sole author</span><span>2026</span><span>Python · Skyfield/SGP4 · Hamlib · Flask · HackRF One</span></div>
+        <h3 id="station-h">PES University Ground Station</h3>
+        <p class="case__stand">Software for a 3.7-metre S-band dish: fetch the orbits, point the antenna, and put everything the operator needs on one screen.</p>
+        <div class="case__body">
+          <div class="case__text">
+            <div>
+              <h4>The problem</h4>
+              <p>The station ran on three programs that didn’t talk to each other — one for orbital data, one for pass prediction, one for the spectrum. During an eight-minute pass, the operator reconciled them in their head. And when I started, there was no rotator to test against.</p>
+            </div>
+            <div>
+              <h4>What I built</h4>
+              <p>A pipeline that pulls the SatNOGS database, matches 21 requested satellites despite inconsistent naming, and writes one element file each, plus a report of what didn’t match. A tracking engine that streams azimuth and elevation to Hamlib’s rotctld: it never commands the dish below 25°, never winds the azimuth cable through its stop at north — it flips the dish over the top instead — and pre-positions before each rise, because elevation only moves at 2° a second.</p>
+              <p style="margin-top:12px">Then a one-screen dashboard: SGP4 propagated locally for 47 satellites, a merged 72-hour pass list, Doppler retuning (about ±50 kHz across an S-band pass), and a Welch-averaged spectrum straight off a HackRF One, with the receiver’s own oscillator spike cut by 57 dB.</p>
+            </div>
+            <div>
+              <h4 class="is-checked"><span>What I checked</span></h4>
+              <p>I wrote a protocol-level rotator simulator before the controller, so the whole loop ran end to end with no hardware. (I enjoyed the simulator more than the controller.) The orbital maths agrees with Gpredict and with a hand-derived second implementation to 0.001°.</p>
+            </div>
+          </div>
+          <div class="case__side">
+            <figure class="fig">
+              <svg viewBox="0 0 340 186" role="img" aria-labelledby="mount-t">
+                <title id="mount-t">Elevation travel of the dish: minus 5 to 185 degrees, commanded only between 25 and 155</title>
+                <defs>
+                  <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <rect width="1.3" height="5" style="fill:var(--ink-3)"/>
+                  </pattern>
+                </defs>
+                <path d="M170,150 L280,150 A110,110 0 0 0 269.7,103.5 Z" style="fill:url(#hatch)"/>
+                <path d="M170,150 L70.3,103.5 A110,110 0 0 0 60,150 Z" style="fill:url(#hatch)"/>
+                <line x1="30" y1="150" x2="310" y2="150" style="stroke:var(--ink-2);stroke-width:1"/>
+                <path d="M279.6,159.6 A110,110 0 1 0 60.4,159.6" style="fill:none;stroke:var(--rule-strong);stroke-width:1.5;stroke-dasharray:3 3"/>
+                <path d="M269.7,103.5 A110,110 0 0 0 70.3,103.5" style="fill:none;stroke:var(--ink);stroke-width:4"/>
+                <line x1="170" y1="150" x2="205" y2="89.4" style="stroke:var(--ink);stroke-width:1.5"/>
+                <path d="M187.7,79.4 Q200,98.1 222.3,99.4" style="fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round"/>
+                <line x1="205" y1="89.4" x2="214" y2="73.8" style="stroke:var(--ink);stroke-width:1;stroke-dasharray:2 2"/>
+                <circle cx="170" cy="150" r="3.5" style="fill:var(--ink)"/>
+                <text x="170" y="28" text-anchor="middle" style="fill:var(--ink);font-size:9px">ZENITH 90°</text>
+                <text x="284" y="100" style="fill:var(--ink);font-size:9px">25°</text>
+                <text x="284" y="111" style="fill:var(--ink-2);font-size:8px">FLOOR</text>
+                <text x="56" y="100" text-anchor="end" style="fill:var(--ink);font-size:9px">155°</text>
+                <text x="56" y="111" text-anchor="end" style="fill:var(--ink-2);font-size:8px">FLOOR</text>
+                <text x="284" y="172" style="fill:var(--ink-3);font-size:8px">−5°</text>
+                <text x="56" y="172" text-anchor="end" style="fill:var(--ink-3);font-size:8px">185°</text>
+                <text x="236" y="114" text-anchor="middle" style="fill:var(--ink-2);font-size:8px">NORMAL</text>
+                <text x="118" y="114" text-anchor="middle" style="fill:var(--ink-2);font-size:8px">FLIPPED</text>
+                <text x="170" y="170" text-anchor="middle" style="fill:var(--ink-3);font-size:8px">HORIZON</text>
+              </svg>
+              <figcaption>The elevation axis travels past zenith to 185°. A pass that crosses north is flown flipped — azimuth + 180°, elevation 180° − el — so it never touches the cable stop, and the 25° floor holds on both sides.</figcaption>
+            </figure>
+            <dl class="spec">
+              <dt>Dish</dt><dd>3.7 m, S-band</dd>
+              <dt>Feed</dt><dd>2200–2300 MHz</dd>
+              <dt>Beamwidth</dt><dd>≈ 2.5°</dd>
+              <dt>Slew, az / el</dt><dd>10°/s / 2°/s</dd>
+              <dt>Receiver</dt><dd>HackRF One, direct</dd>
+            </dl>
+            <div class="case__links">
+              <a href="https://github.com/mansdone/satellite-ground-station-automation">Code on GitHub ↗</a>
+            </div>
+          </div>
+        </div>
+        <p class="footnote"><b>Sindhu Netra,</b> PES University’s own satellite, re-entered in December 2023. It’s still on the dashboard’s list — in an archive mode that shows its orbital history from Space-Track, rather than inventing a live position it no longer has.</p>
+      </article>
+
+      <!-- Wildfire -->
+      <article class="case" id="case-wildfire" aria-labelledby="wildfire-h">
+        <div class="case__kicker label"><span>Team of four</span><span>Final-year capstone, 2026</span><span>Python · Pandas · PyTorch · XGBoost</span></div>
+        <h3 id="wildfire-h">Wildfire Detection &amp; Prevention</h3>
+        <p class="case__stand">Daily fire risk for the Karnataka–Kerala–Tamil Nadu forest belt, from six years of NASA climate data and satellite fire detections.</p>
+        <div class="case__body">
+          <div class="case__text">
+            <div>
+              <h4>My part</h4>
+              <p>The upstream risk features, the hotspot heatmaps and Top-5 output, and blind-test validation of the finished model.</p>
+            </div>
+            <div>
+              <h4>What I built</h4>
+              <p>Five NASA POWER variables — humidity, rainfall, soil moisture, wind speed and direction — merged into one 99,954-row table on latitude, longitude and day of year. 119,623 raw VIIRS fire detections turned into 104,374 clean labels, snapped onto the 0.5° × 0.625° climate grid so fires and weather actually line up. Then I replaced min-max risk scores with fire behaviour: a sigmoid on humidity for flashover, wind scaled quadratically, a hinge at the soil wilting point, and a cut-off after heavy rain.</p>
+            </div>
+            <div>
+              <h4 class="is-checked"><span>What I checked</span></h4>
+              <p>Validation was mine, so I ran the saved models as black boxes. The CNN returned the same vector for every input, and 94% of its inputs were all-zero patches — only 4 of 54 grid cells fell inside the terrain rasters. A left join had lifted the positive rate from 20% to 56%. I re-measured on clean data and brought the team numbers that hold up.</p>
+            </div>
+          </div>
+          <div class="case__side">
+            <figure class="fig">
+              <div class="bars" role="img" aria-label="Accuracy 0.899 against an always-no-fire baseline of 0.850; ROC-AUC 0.907 against chance 0.5; PR-AUC 0.686 against a base rate of 0.15">
+                <div class="bars__row">
+                  <div class="bars__top"><span>Accuracy</span><b class="num">0.899</b></div>
+                  <div class="bars__track"><div class="bars__fill" style="width:89.9%"></div><div class="bars__base bars__base--r" style="left:85%" data-l="always “no fire” 0.850"></div></div>
+                </div>
+                <div class="bars__row">
+                  <div class="bars__top"><span>ROC-AUC</span><b class="num">0.907</b></div>
+                  <div class="bars__track"><div class="bars__fill" style="width:90.7%"></div><div class="bars__base" style="left:50%" data-l="chance 0.5"></div></div>
+                </div>
+                <div class="bars__row">
+                  <div class="bars__top"><span>PR-AUC</span><b class="num">0.686</b></div>
+                  <div class="bars__track"><div class="bars__fill" style="width:68.6%"></div><div class="bars__base" style="left:15%" data-l="base rate 0.15"></div></div>
+                </div>
+              </div>
+              <figcaption>Each bar on a 0–1 scale; the dashed line is what you’d get with no model. With a 15% fire rate, accuracy flatters anything — PR-AUC is the number I’d defend.</figcaption>
+            </figure>
+            <dl class="spec">
+              <dt>Climate table</dt><dd class="num">99,954 rows</dd>
+              <dt>Fire labels</dt><dd class="num">104,374 of 119,623</dd>
+              <dt>Grid</dt><dd>0.5° × 0.625°</dd>
+              <dt>Span</dt><dd>6 years, daily</dd>
+            </dl>
+            <div class="case__links">
+              <a href="https://github.com/mansdone/forest-fire-risk-prediction">Risk-feature scripts ↗</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Urdu ASR -->
+      <article class="case" id="case-asr" aria-labelledby="asr-h">
+        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>PyTorch · Hugging Face Transformers · CTC</span></div>
+        <h3 id="asr-h">Urdu Speech Recognition</h3>
+        <p class="case__stand">Fine-tuning a 300-million-parameter speech model to transcribe Urdu, on a free GPU that switches off after twelve hours.</p>
+        <div class="case__body">
+          <div class="case__text">
+            <div>
+              <h4>What I built</h4>
+              <p>wav2vec2-xls-r-300m with a CTC head, trained on Common Voice 17 Urdu. Mozilla had emptied the official dataset repositories in October 2025, so the pipeline runs off a community mirror. The model is on Hugging Face with a Gradio demo anyone can talk to.</p>
+            </div>
+            <div>
+              <h4 class="is-checked"><span>What I checked</span></h4>
+              <p>The first runs never finished. Tracing where the twelve hours went showed that full-test-set evaluation every 400 steps was eating most of it — and that Kaggle’s P100 wasn’t supported by the installed PyTorch at all. Dual T4s and rationed evaluation got a usable checkpoint at step 6,400, which I then scored on every one of the 4,056 test clips.</p>
+            </div>
+          </div>
+          <div class="case__side">
+            <figure class="fig">
+              <p class="label" style="margin-bottom:26px">Planned schedule, completed before the cut-off</p>
+              <div class="budget__track" role="img" aria-label="72 percent of the planned training schedule completed when the 12-hour session ended, at step 6,400">
+                <div class="budget__fill"></div>
+                <div class="budget__cap"></div>
+              </div>
+              <div class="budget__axis"><span>0%</span><span>100%</span></div>
+              <div class="budget__marks">
+                <div><span class="label">Word error</span><b>34.6%</b></div>
+                <div><span class="label">Character error</span><b>11.5%</b></div>
+              </div>
+              <figcaption>The session ended 72% of the way through the plan. Scored on the full test split: 4,056 of 4,056 clips.</figcaption>
+            </figure>
+            <div class="case__links">
+              <a href="https://huggingface.co/mansdone/wav2vec2-xls-r-300m-urdu">Model on Hugging Face ↗</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ASCEND -->
+      <article class="case" id="case-ascend" aria-labelledby="ascend-h">
+        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>Next.js 16 · TypeScript · Prisma · Postgres</span></div>
+        <h3 id="ascend-h">ASCEND</h3>
+        <p class="case__stand">A productivity app my friends actually use: planner, calendar, workout log, focus timer, habit streaks, and a way to compare weeks with each other.</p>
+        <div class="case__body">
+          <div class="case__text">
+            <div>
+              <h4>What I built</h4>
+              <p>Next.js 16 and React 19 on an 11-model Prisma schema over Neon Postgres, NextAuth for sessions, deployed on Vercel. About eight people use it, and their first week of feedback rewrote the gym logger — free-text exercises instead of the 30-item library I’d assumed they wanted.</p>
+            </div>
+            <div>
+              <h4 class="is-checked"><span>What I checked</span></h4>
+              <p>Before opening it to anyone, I attacked my own API. Every route, every cross-user request, every form field. The list on the right is what passed.</p>
+            </div>
+          </div>
+          <div class="case__side">
+            <ul class="checks" aria-label="Security checks, all passing">
+              <li><span>No session → 401 on every route</span><span class="ok">PASS</span></li>
+              <li><span>Another user’s record → 404, not 403</span><span class="ok">PASS</span></li>
+              <li><span>SQL injection → parameterised</span><span class="ok">PASS</span></li>
+              <li><span>Unknown fields → stripped by schema</span><span class="ok">PASS</span></li>
+              <li><span>Script in input → escaped</span><span class="ok">PASS</span></li>
+              <li><span>Passwords → bcrypt</span><span class="ok">PASS</span></li>
+              <li><span>Cookie → HttpOnly, Secure, SameSite</span><span class="ok">PASS</span></li>
+              <li><span>Repeated attempts → 429</span><span class="ok">PASS</span></li>
+              <li><span>Security headers set</span><span class="ok">PASS</span></li>
+            </ul>
+            <div class="case__links">
+              <a href="https://ascend-eight-eta.vercel.app">Live app ↗</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Job Hunt Command Center -->
+      <article class="case" id="case-jobs" aria-labelledby="jobs-h">
+        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>FastAPI · SQLAlchemy · SQLite · APScheduler</span></div>
+        <h3 id="jobs-h">Job Hunt Command Center</h3>
+        <p class="case__stand">If I applied for a role at your company, this is probably how I found it.</p>
+        <div class="case__body">
+          <div class="case__text">
+            <div>
+              <h4>What I built</h4>
+              <p>A scheduled crawler over 166 verified public applicant-tracking boards — about 13,000 postings a run — that scores each role against my profile and prepares the application. Deduplication had to learn that one job description posted in two cities is two jobs, not one.</p>
+            </div>
+            <div>
+              <h4 class="is-checked"><span>What I checked</span></h4>
+              <p>The line it won’t cross is written as a test, not a promise. It fills forms in; it never submits them. Some questions are never answered by a machine, and any profile field I haven’t confirmed is refused rather than guessed.</p>
+            </div>
+          </div>
+          <div class="case__side">
+            <div class="rulebox">
+              <p class="big">Prefill: yes.<br>Submit: never.</p>
+              <p>Never machine-answered: work authorisation, citizenship, disability, attestations.</p>
+              <p>Profile field = UNKNOWN → refuse. Don’t guess.</p>
+            </div>
+            <dl class="spec">
+              <dt>Boards</dt><dd class="num">166, public ATS only</dd>
+              <dt>Postings / run</dt><dd class="num">≈ 13,000</dd>
+              <dt>Scraped</dt><dd>No LinkedIn, Naukri, Indeed</dd>
+            </dl>
+          </div>
+        </div>
+      </article>
+
+      <!-- Also built -->
+      <div class="also" aria-label="Other projects">
+        <div class="also__row">
+          <h3>Crime Risk Prediction</h3>
+          <p>Three government datasets disagreed on how to spell India’s states — 39, 29 and 39 records. Regex cleaning and an alias map brought them to 28 clean matches, then a Random Forest with stratified 3-fold cross-validation, shipped as a Streamlit app.</p>
+          <p class="label">Pandas · scikit-learn · Streamlit<br><a href="https://github.com/mansdone/crime-risk-prediction">GitHub ↗</a></p>
+        </div>
+        <div class="also__row">
+          <h3>Data Quality Platform</h3>
+          <p>Raw Excel in, live charts and a written report out, for people who don’t code. Levenshtein matching merged near-duplicate names and cut duplicate rows by about 30%.</p>
+          <p class="label">React · Node · Pandas · Chart.js</p>
+        </div>
+        <div class="also__row">
+          <h3>Hostel Management</h3>
+          <p>A booking marks the room occupied and writes the booking row — both or neither, in one transaction with rollback on either failure. Later rebuilt in Spring Boot to see what the ORM does underneath.</p>
+          <p class="label">Node · Express · MySQL · Spring Boot</p>
+        </div>
+        <div class="also__row">
+          <h3>MediBot</h3>
+          <p>An autonomous delivery robot for a hospital floor: six rooms, SLAM mapping, and a delivery queue that knows which request is urgent. Team project.</p>
+          <p class="label">ROS2 Humble · Nav2 · SLAM Toolbox<br><a href="https://github.com/abhinow03/Autonomus_indoor_navigation">GitHub ↗</a></p>
+        </div>
+        <div class="also__row">
+          <h3>Research Evaluation Automation</h3>
+          <p>Batch-generated the evaluation documents people had been filling in by hand — roughly 80% of the paperwork gone.</p>
+          <p class="label">React · DOCX.js</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ LOG -->
+<section class="sec" id="log" aria-labelledby="log-h">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Log</span>
+      <p>In order, including the parts that aren’t code.</p>
+    </div>
+    <div class="sec__main">
+      <h2 id="log-h">Where I’ve been.</h2>
+      <ol class="log">
+        <li>
+          <time>Before PES</time>
+          <div><p>State-level swimmer, and captain of my school’s swim team.</p></div>
+        </li>
+        <li>
+          <time datetime="2023-08">2023 · Aug</time>
+          <div><p>Started a B.Tech in Computer Science &amp; Engineering at PES University, Bengaluru.</p></div>
+        </li>
+        <li>
+          <time datetime="2024">2024</time>
+          <div>
+            <p>Founded PES University’s first Clash Royale campus tournament, and ran it — logistics, scheduling, and live operations on the day. Core logistics for Samarpana ’24; student and industry volunteer at TAMS.</p>
+            <p>Shortlisted finalist at the C-HEAL Hackathon, pitching a healthcare prototype to industry mentors. Competed in HealthHack 3.0.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2025-07">2025 · Jul–Aug</time>
+          <div>
+            <p class="role">Software Development Intern, Ryzklytix Consulting Solutions</p>
+            <p>Client-facing React and Node features, shipped against real delivery deadlines, through code review, sprint planning and deployment. The first time someone else depended on my code by a fixed date.</p>
+            <blockquote>Having senior engineers pull apart my pull requests is the fastest I’ve improved at anything.</blockquote>
+          </div>
+        </li>
+        <li>
+          <time datetime="2026">2026</time>
+          <div>
+            <p>The ground station software: the TLE pipeline, then the tracker, then the dashboard. ASCEND goes live in July. In August, the Urdu model reaches 34.6% WER, the Job Hunt Command Center starts its daily runs, and I audit the capstone.</p>
+          </div>
+        </li>
+        <li class="is-next">
+          <time datetime="2027-06">2027 · Jun</time>
+          <div><p>Graduate. The next line in this log is the team I join.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ EVIDENCE -->
+<section class="sec" id="evidence" aria-labelledby="evidence-h">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Evidence</span>
+      <p>If a skill isn’t on this grid, I don’t claim it.</p>
+    </div>
+    <div class="sec__main">
+      <h2 id="evidence-h">Every skill, and where I actually used it.</h2>
+      <div class="grid-scroll">
+        <table class="evidence">
+          <thead id="ev-head"></thead>
+          <tbody id="ev-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ CONTACT -->
+<section class="sec contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Contact</span>
+      <p>Bengaluru, IST (UTC+5:30).</p>
+    </div>
+    <div class="sec__main">
+      <h2 id="contact-h">I’m looking for my first full-time role.</h2>
+      <p class="sec__intro">SDE, backend, full-stack, ML or data — in Bengaluru, Hyderabad, Pune or remote, and happy to relocate. Graduating June 2027; open to internships before then. The fastest way to reach me:</p>
+      <a class="contact__mail" href="mailto:jawwaadsheriff@gmail.com">jawwaadsheriff@gmail.com</a>
+      <div class="contact__links">
+        <a href="https://linkedin.com/in/md-jawwaad-sheriff">LinkedIn ↗</a>
+        <a href="https://github.com/mansdone">GitHub ↗</a>
+        <a href="https://huggingface.co/mansdone">Hugging Face ↗</a>
+        <a href="assets/Mohammed_Jawwaad_Sheriff_Resume.pdf">Résumé, PDF</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================================================================ FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="sec__margin">
+      <span class="label">Signature</span>
+      <p>Me, as a two-line element set.</p>
+    </div>
+    <div>
+      <div class="tle"><pre id="tle" aria-describedby="tle-decode"></pre></div>
+      <p class="tle__decode" id="tle-decode" aria-live="polite">Hover or tab through a field to decode it. The format is real, and so are the checksums.</p>
+      <div class="tle__verify">
+        <button type="button" id="tle-verify">Verify checksums</button>
+        <span id="tle-result"></span>
+      </div>
+      <div class="colophon">
+        <span>© 2026 Mohammed Jawwaad Sheriff</span>
+        <span>Hand-written HTML, CSS and JavaScript. One library: satellite.js, for SGP4.</span>
+        <span>No analytics, no trackers.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/tles.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/5.0.0/satellite.min.js" defer></script>
+<script src="js/sky.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
