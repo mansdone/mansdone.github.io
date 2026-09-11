@@ -3,516 +3,700 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mohammed Jawwaad Sheriff</title>
-<meta name="description" content="Software engineer, PES University class of 2027. Ground-station tracking software, ML pipelines audited end to end, and a live view of the satellites over my university's dish.">
-<meta name="author" content="Mohammed Jawwaad Sheriff">
-<meta property="og:title" content="Mohammed Jawwaad Sheriff">
-<meta property="og:description" content="I build systems, then I go looking for where they're wrong.">
+<title>Jawwaad Sheriff</title>
+<meta name="description" content="Mohammed Jawwaad Sheriff: software engineer in Bengaluru, final-year CS at PES University. Satellites, machine learning, and checking the numbers.">
+<meta name="theme-color" content="#07090c">
+<meta property="og:title" content="Jawwaad Sheriff">
+<meta property="og:description" content="I build systems, then go looking for where they're wrong.">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#e8eceb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b141a" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Chivo+Mono:wght@400;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&display=swap">
-<link rel="stylesheet" href="styles.css">
-<script>
-  // apply a saved theme before first paint
-  try { var t = localStorage.getItem("mjs-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/portrait.webp">
+<style>
+/* ---------------------------------------------------------------- reset */
+*{margin:0;padding:0;box-sizing:border-box}
+img,video{display:block;max-width:100%}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-appearance:none;appearance:none}
+
+/* ---------------------------------------------------------------- tokens */
+:root{
+  --background:#07090c; --foreground:#eef0ec;
+  --surface:#0f1216; --surface-2:#161b20;
+  --muted:#7f868a; --line:rgba(238,240,236,.1); --line-strong:rgba(238,240,236,.22);
+  --accent:#f4d318; --accent-2:#ffe45c;
+  --gutter:2.5rem; --section:9rem;
+  --font-display:"Anton",Impact,"Arial Narrow Bold",sans-serif;
+  --font-sans:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --t-hero:28rem; --t-mega:13rem; --t-display:7.5rem; --t-h1:5rem; --t-h2:3.25rem; --t-h3:1.75rem;
+  --t-lead:1.375rem; --t-body:1.0625rem; --t-eyebrow:.8125rem;
+  --expo:cubic-bezier(.16,1,.3,1); --quart:cubic-bezier(.165,.84,.44,1); --wipe:cubic-bezier(.22,1,.36,1);
+}
+
+/* adaptive rem grid: authored at 16px against a 1920 / 1440 / 1024 / 360 base */
+html{font-size:16px;background:#07090c}
+@media (max-width:1920px){html{font-size:.833333vw}}
+@media (max-width:1440px){html{font-size:1.111111vw}}
+@media (max-width:1024px){html{font-size:1.5625vw}}
+@media (max-width:640px){html{font-size:4.444444vw} :root{--gutter:16px}}
+
+/* lenis */
+html.lenis,html.lenis body{height:auto}
+.lenis:not(.lenis-autoToggle).lenis-stopped{overflow:clip}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+
+body{background:#07090c;color:#eef0ec;font-family:var(--font-sans);font-size:var(--t-body);line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:#f4d318;color:#07090c}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+main{position:relative;width:100%;overflow-x:hidden}
+
+.display{font-family:var(--font-display);font-weight:400;text-transform:uppercase;letter-spacing:-.01em}
+.muted{color:var(--muted)}
+.eyebrow{display:flex;align-items:center;gap:.75rem;font-size:var(--t-eyebrow);line-height:1.2;font-weight:500;
+  text-transform:uppercase;letter-spacing:.22em;color:var(--muted)}
+.eyebrow::before{content:"";width:.5rem;height:.5rem;border-radius:9999px;background:var(--accent);flex:none}
+.label{font-size:var(--t-eyebrow);line-height:1.2;text-transform:uppercase;letter-spacing:.22em;color:var(--muted)}
+.section{padding:var(--section) var(--gutter)}
+
+/* ---------------------------------------------------------------- reveal primitives */
+/* words of a heading: each clipped, rising a line at a time */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:.12em .02em .06em;margin:-.12em -.02em -.06em}
+.w>span{display:inline-block;transform:translateY(110%);opacity:0;
+  transition:transform .85s var(--expo) var(--d,0ms),opacity .85s var(--expo) var(--d,0ms)}
+.is-in .w>span{transform:none;opacity:1}
+/* blocks that fade and slide up */
+.fade{opacity:0;transform:translateY(var(--y,16px));
+  transition:opacity var(--dur,.52s) var(--expo) var(--d,0ms),transform var(--dur,.52s) var(--expo) var(--d,0ms)}
+.fade.is-in{opacity:1;transform:none}
+
+/* ---------------------------------------------------------------- preloader */
+.preloader{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  gap:.75rem;padding:var(--gutter);transition:transform .65s var(--wipe)}
+.preloader::before{content:"";position:absolute;inset:0;z-index:-10;background:var(--background)}
+.preloader.is-wiped{transform:translateY(-100%)}
+.preloader.is-done{pointer-events:none;visibility:hidden}
+.preloader__brand{font-size:var(--t-h3);line-height:1;transition:opacity .3s ease-out}
+.preloader__count{font-size:var(--t-display);line-height:1;font-variant-numeric:tabular-nums;transition:opacity .3s ease-out}
+.preloader__count b{font-weight:400;color:var(--accent)}
+.preloader.is-fading .preloader__brand,.preloader.is-fading .preloader__count{opacity:0}
+@media (min-width:640px){.preloader{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:1rem}}
+
+/* ---------------------------------------------------------------- nav */
+.site-nav{position:fixed;inset-inline:0;top:0;z-index:50;pointer-events:none}
+.site-nav nav{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;padding:1.5rem var(--gutter)}
+.logo{display:flex;align-items:center;gap:.75rem}
+.logo__mark{display:grid;place-items:center;width:2.5rem;height:2.5rem;border-radius:9999px;border:1px solid var(--line-strong);
+  font-weight:600;letter-spacing:-.01em;font-size:.95rem;background:rgba(7,9,12,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.logo__name{display:none;font-size:var(--t-eyebrow);font-weight:500;text-transform:uppercase;letter-spacing:.22em;color:var(--muted)}
+@media (min-width:640px){.logo__name{display:block}}
+.nav-links{display:none;gap:2.5rem}
+.nav-links a{position:relative;font-size:var(--t-eyebrow);font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);transition:color .34s ease-out}
+.nav-links a::after{content:"";position:absolute;bottom:-.25rem;left:0;height:1px;width:0;background:var(--accent);transition:width .34s var(--expo)}
+.nav-links a:hover{color:var(--foreground)}
+.nav-links a:hover::after{width:100%}
+@media (min-width:768px){.nav-links{display:flex}}
+.burger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.375rem;width:2.5rem;height:2.5rem;position:relative;z-index:60}
+.burger span{display:block;height:.125rem;width:1.5rem;background:var(--foreground);transition:transform .42s var(--expo),opacity .3s ease-out}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(.5rem) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-.5rem) rotate(-45deg)}
+@media (min-width:768px){.burger{display:none}}
+.menu{position:fixed;inset:0;z-index:50;background:var(--background);display:flex;flex-direction:column;justify-content:center;
+  padding-inline:var(--gutter);opacity:0;visibility:hidden;transition:opacity .45s ease-out,visibility 0s linear .45s}
+.menu.is-open{opacity:1;visibility:visible;transition:opacity .45s ease-out}
+.menu ul{display:flex;flex-direction:column;gap:1rem}
+.menu a{display:inline-block;font-size:var(--t-h2);line-height:1;opacity:0;transform:translateY(48px);
+  transition:transform .42s var(--expo),opacity .42s ease-out}
+.menu.is-open a{opacity:1;transform:none;transition-delay:calc(120ms + var(--i) * 60ms)}
+@media (min-width:768px){.menu{display:none}}
+
+/* ---------------------------------------------------------------- hero */
+.hero{position:relative;display:flex;flex-direction:column;min-height:100svh;overflow:hidden}
+.hero__top{position:relative;z-index:30;display:flex;flex-direction:column;gap:2rem;padding:7rem var(--gutter) 0}
+@media (min-width:640px){.hero__top{flex-direction:row;align-items:flex-start;justify-content:space-between;padding-top:8rem}}
+.hero__roles{font-size:var(--t-h3);line-height:1.05;color:var(--foreground)}
+.hero__roles .r{display:block;overflow:hidden;padding-top:.08em;margin-top:-.08em}
+.hero__roles .r>span{display:block;transform:translateY(110%);opacity:0;transition:transform .76s var(--expo),opacity .76s var(--expo)}
+.hero__roles .r.is-in>span{transform:none;opacity:1}
+@media (min-width:640px){.hero__roles{font-size:var(--t-h2)}}
+.hero__desc{max-width:26rem;font-size:var(--t-body);color:var(--muted)}
+.hero__desc b{color:var(--foreground);font-weight:500}
+@media (min-width:640px){.hero__desc{text-align:right}}
+
+.hero__portrait{position:absolute;z-index:20;bottom:0;left:0;right:0;margin-inline:auto;height:50svh;width:74vw;pointer-events:none;
+  opacity:0;translate:0 3%;transition:opacity 1.2s var(--expo),translate 1.4s var(--expo)}
+.hero__portrait.is-in{opacity:1;translate:0 0}
+@media (min-width:640px){.hero__portrait{width:52vw;height:80vh}}
+@media (min-width:1024px){.hero__portrait{width:38vw;height:84vh}}
+.hero__portrait .liquid{width:100%;height:100%;pointer-events:auto}
+.hero__portrait img{object-fit:contain;object-position:center bottom}
+.hero__base{position:absolute;inset-inline:0;bottom:0;z-index:20;height:26vh;background:linear-gradient(to bottom,transparent,#07090c);pointer-events:none}
+
+.hero__name{position:absolute;inset-inline:0;bottom:0;z-index:10;transform:translateY(6%);display:flex;flex-direction:column;align-items:center;
+  line-height:.78;color:var(--accent);font-size:min(var(--t-mega),24.5vw)}
+@media (min-width:640px){.hero__name{font-size:min(var(--t-hero),24.5vw)}}
+@media (max-width:639px){
+  .hero__name{bottom:8svh}
+  .hero__base{height:14svh}
+  .hero__portrait{width:62vw;height:44svh}
+}
+.hero__name .line{display:block;white-space:nowrap}
+.ch{display:inline-block;overflow:hidden;vertical-align:top;padding:.2em 0 .16em;margin:-.2em 0 -.16em}
+.ch>span{display:inline-block;transform:translateY(135%);opacity:0;transition:transform .9s var(--expo) var(--d),opacity .9s var(--expo) var(--d)}
+.line.is-in .ch>span{transform:none;opacity:1}
+
+.hero__cue{position:absolute;z-index:30;bottom:2rem;left:var(--gutter);display:flex;align-items:center;gap:.75rem;
+  font-size:var(--t-eyebrow);text-transform:uppercase;letter-spacing:.22em;color:var(--muted);opacity:0;transition:opacity .8s ease-out}
+.hero__cue::before{content:"";width:2.5rem;height:1px;background:var(--accent)}
+.hero__cue.is-in{opacity:1}
+
+/* ---------------------------------------------------------------- liquid image */
+.liquid{position:relative;overflow:hidden;background:var(--surface)}
+.liquid--bare{background:none;overflow:visible}
+.liquid svg.liquid__defs{position:absolute;width:0;height:0}
+.liquid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.liquid__ph{position:absolute;inset:0;background:radial-gradient(130% 130% at 30% 15%,var(--surface-2),var(--background))}
+.liquid__veil{position:absolute;inset:0;background:var(--background);mix-blend-mode:color;opacity:.88;pointer-events:none}
+.liquid__glow{position:absolute;inset:0;opacity:0;pointer-events:none;
+  background:linear-gradient(120deg,transparent 30%,color-mix(in srgb,var(--accent) 35%,transparent) 50%,transparent 70%)}
+.liquid__vig{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 120% at 50% 120%,color-mix(in srgb,#07090c 70%,transparent),transparent 60%)}
+
+/* ---------------------------------------------------------------- marquee */
+.marquee{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2rem 0}
+.marquee__track{display:flex;width:max-content;flex-wrap:nowrap;animation:marquee 22s linear infinite}
+.marquee__item{display:flex;align-items:center;font-size:var(--t-h2);line-height:1;white-space:nowrap}
+.marquee__item::after{content:"";margin-inline:2rem;width:.625rem;height:.625rem;border-radius:9999px;background:var(--accent)}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------------------------------------------------------------- story */
+.story{display:grid;gap:3rem}
+@media (min-width:1024px){.story{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gutter)} .story>div{grid-column:span 6} .story__right{padding-top:.5rem}}
+.h-sec{margin-top:1.5rem;line-height:.95;font-size:var(--t-h2)}
+@media (min-width:640px){.h-sec--big{font-size:var(--t-h1)}}
+.story__body{margin-top:2rem;max-width:46ch;font-size:var(--t-lead);line-height:1.45;color:var(--muted)}
+.principles li{display:grid;grid-template-columns:auto 1fr;column-gap:1.5rem;border-top:1px solid var(--line);padding:2rem 0}
+.principles li:last-child{border-bottom:1px solid var(--line)}
+.principles .n{font-size:var(--t-h3);line-height:1.15;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}
+.principles h3{font-size:var(--t-h3);line-height:1.15;font-weight:600;letter-spacing:-.01em}
+.principles p{margin-top:.75rem;max-width:44ch;color:var(--muted)}
+
+/* ---------------------------------------------------------------- section header row */
+.sec-head{display:flex;flex-direction:column;gap:1.5rem}
+@media (min-width:640px){.sec-head{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+
+/* ---------------------------------------------------------------- work */
+.work{margin-top:4rem;display:grid;grid-template-columns:1fr;row-gap:4rem}
+@media (min-width:768px){.work{grid-template-columns:1fr 1fr;column-gap:var(--gutter)} .work li:nth-child(even){margin-top:6rem}}
+.card .liquid{aspect-ratio:16/11;width:100%;border-radius:.125rem}
+.card__row{margin-top:1.5rem;border-top:1px solid var(--line);padding-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem}
+.card h3{font-size:var(--t-h3);line-height:1.15;font-weight:600;letter-spacing:-.01em;transition:color .5s var(--expo)}
+.card:hover h3,.card:focus-visible h3{color:var(--accent)}
+.card__blurb{margin-top:.5rem;max-width:42ch;color:var(--muted)}
+.card__meta{flex:none;text-align:right}
+.card__year{font-size:var(--t-eyebrow);text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}
+.card__out{margin-top:.5rem;font-size:var(--t-eyebrow);font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:var(--accent)}
+.card__cat{margin-top:.75rem}
+.card__cat::after{content:" ↗";color:var(--accent)}
+
+/* ---------------------------------------------------------------- numbers */
+.stats{margin-top:4rem;display:grid;grid-template-columns:1fr;border-top:1px solid var(--line)}
+@media (min-width:640px){.stats{grid-template-columns:repeat(2,1fr)} .stat:nth-child(2n){border-left:1px solid var(--line);padding-left:2rem}}
+@media (min-width:1024px){.stats{grid-template-columns:repeat(4,1fr)} .stat:not(:nth-child(4n+1)){border-left:1px solid var(--line);padding-left:2rem} .stat:nth-child(4n+1){border-left:0;padding-left:0}}
+.stat{display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:1rem;border-bottom:1px solid var(--line);padding:2.5rem 0}
+@media (min-width:1024px){.stat{padding:3rem 0}}
+.stat dd{font-size:min(var(--t-display),19vw);line-height:1;transition:color .34s ease-out;white-space:nowrap}
+@media (min-width:1024px){.stat dd{font-size:min(var(--t-display),6.2vw)}}
+.stat:hover dd{color:var(--accent)}
+.stat dt{max-width:20ch;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+
+/* ---------------------------------------------------------------- findings */
+.voices{margin-top:4rem;display:grid;grid-template-columns:1fr;gap:3rem}
+@media (min-width:1024px){.voices{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gutter)} .voices__list{grid-column:span 5} .voices__panel{grid-column:span 7}}
+.voices__list button{width:100%;display:flex;align-items:baseline;gap:1.25rem;border-top:1px solid var(--line);padding:1.75rem 0;text-align:left}
+.voices__list li:last-child button{border-bottom:1px solid var(--line)}
+.v-idx{font-size:var(--t-eyebrow);font-variant-numeric:tabular-nums;letter-spacing:.18em;color:var(--muted);transition:color .34s ease-out}
+.v-body{flex:1}
+.v-name{display:block;font-size:var(--t-h3);line-height:1.15;font-weight:600;letter-spacing:-.01em;color:var(--muted);transition:color .34s ease-out}
+.v-role{display:block;margin-top:.25rem;font-size:var(--t-eyebrow);text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}
+.v-rule{align-self:center;height:1px;width:0;background:var(--accent);transition:width .45s var(--expo)}
+.is-active .v-idx{color:var(--accent)}
+.is-active .v-name{color:var(--foreground)}
+.is-active .v-rule{width:2.5rem}
+.voices__panel{display:grid;grid-template-columns:1fr;gap:2rem}
+@media (min-width:640px){.voices__panel{grid-template-columns:1fr auto;align-items:start}}
+.voices__quote{order:2}
+@media (min-width:640px){.voices__quote{order:1}}
+.voices__quote p{max-width:30ch;font-size:var(--t-h3);font-weight:500;line-height:1.3;letter-spacing:-.01em}
+.qw{display:inline-block;opacity:0;transform:translateY(18px);animation:qin .52s var(--quart) forwards;animation-delay:calc(var(--i) * 22ms)}
+@keyframes qin{to{opacity:1;transform:none}}
+.voices__quote footer{margin-top:2rem;font-size:var(--t-eyebrow);text-transform:uppercase;letter-spacing:.18em;color:var(--muted)}
+.voices__pic{order:1;width:100%;opacity:0;transform:scale(1.06);transition:opacity .64s var(--expo),transform .64s var(--expo)}
+.voices__pic.is-in{opacity:1;transform:none}
+@media (min-width:640px){.voices__pic{order:2;width:16rem}}
+.voices__pic .liquid{aspect-ratio:4/5;width:100%;border-radius:.125rem}
+
+/* ---------------------------------------------------------------- contact */
+.contact{padding:var(--section) var(--gutter) 0}
+.contact h2{max-width:18ch;font-size:var(--t-h1)}
+@media (min-width:640px){.contact h2{font-size:var(--t-display)}}
+.contact__lead{margin-top:2rem;max-width:44ch;font-size:var(--t-lead);line-height:1.45;color:var(--muted)}
+.mail{margin-top:3rem;display:inline-flex;align-items:baseline;gap:.75rem;font-size:var(--t-h3);font-weight:600;letter-spacing:-.01em;word-break:break-all;
+  transition:transform .42s cubic-bezier(.34,1.56,.64,1),color .34s ease-out}
+.mail span:last-child{color:var(--accent);word-break:normal}
+.mail:hover{transform:translateX(14px);color:var(--accent)}
+@media (min-width:640px){.mail{font-size:var(--t-h1);gap:1rem}}
+.foot{margin-top:var(--section);border-top:1px solid var(--line);padding:3rem 0;display:grid;grid-template-columns:1fr;gap:2.5rem}
+@media (min-width:1024px){.foot{grid-template-columns:repeat(12,minmax(0,1fr))} .foot>:nth-child(1){grid-column:span 6} .foot>:nth-child(2),.foot>:nth-child(3){grid-column:span 3} .foot>:nth-child(3){text-align:right}}
+.foot__sig{font-size:var(--t-h2);line-height:1}
+.foot ul{display:grid;gap:.5rem}
+.foot ul a{display:inline-flex;align-items:center;color:var(--muted);transition:color .34s ease-out}
+.foot ul a::before{content:"";height:1px;width:0;margin-right:0;background:var(--accent);transition:width .34s var(--expo),margin .34s var(--expo)}
+.foot ul a:hover{color:var(--foreground)}
+.foot ul a:hover::before{width:1.5rem;margin-right:.6rem}
+.foot__copy{font-size:var(--t-eyebrow);text-transform:uppercase;letter-spacing:.18em;color:var(--muted);line-height:1.8}
+
+/* ---------------------------------------------------------------- reduced motion */
+@media (prefers-reduced-motion:reduce){
+  .preloader{display:none}
+  .marquee__track{animation:none}
+  .w>span,.fade,.ch>span,.hero__roles .r>span,.hero__portrait,.hero__cue,.voices__pic,.qw{transition:none!important;animation:none!important;opacity:1!important;transform:none!important;translate:none!important}
+}
+</style>
+<noscript><style>.preloader{display:none}.w>span,.fade,.ch>span,.hero__roles .r>span,.hero__portrait,.hero__cue,.voices__pic{opacity:1;transform:none;translate:none}</style></noscript>
 </head>
 <body>
 
-<header class="bar">
-  <div class="wrap">
-    <a class="bar__name" href="#top">Jawwaad Sheriff</a>
-    <div class="bar__live" aria-label="Ground station status">
-      <span class="bar__coords"><i class="dot dot--live" aria-hidden="true"></i>PES GS 12.9500°N 77.6670°E 888&nbsp;m</span>
-      <span><time id="bar-clock" class="num">--:--:--</time><span class="bar__tz">&nbsp;IST</span></span>
-      <span class="bar__next" id="bar-next">Predicting passes…</span>
-    </div>
-    <nav aria-label="Sections">
-      <a href="#findings">Findings</a>
-      <a href="#work">Work</a>
-      <a href="#log" class="nav-extra">Log</a>
-      <a href="#contact">Contact</a>
-      <button class="bar__theme" id="theme-toggle" type="button" aria-label="Switch colour theme">Night</button>
-    </nav>
-  </div>
+<!-- ================================================================ preloader -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <p class="preloader__brand display">Jawwaad Sheriff</p>
+  <p class="preloader__count display"><span id="count">0</span><b>%</b></p>
+</div>
+
+<!-- ================================================================ nav -->
+<header class="site-nav">
+  <nav aria-label="Primary">
+    <a class="logo" href="#top" aria-label="Jawwaad Sheriff, back to top">
+      <span class="logo__mark">JS</span>
+      <span class="logo__name">Jawwaad Sheriff</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#story">Story</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#numbers">Numbers</a></li>
+      <li><a href="#findings">Findings</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+  </nav>
 </header>
+<div class="menu" id="menu" aria-hidden="true">
+  <ul>
+    <li><a class="display" style="--i:0" href="#story">Story</a></li>
+    <li><a class="display" style="--i:1" href="#work">Work</a></li>
+    <li><a class="display" style="--i:2" href="#numbers">Numbers</a></li>
+    <li><a class="display" style="--i:3" href="#findings">Findings</a></li>
+    <li><a class="display" style="--i:4" href="#contact">Contact</a></li>
+  </ul>
+</div>
 
-<main id="top">
+<main>
+<!-- ================================================================ hero -->
+<section class="hero" id="top">
+  <div class="hero__top">
+    <h2 class="hero__roles display" aria-label="Engineer, Builder, Swimmer, Skeptic">
+      <span class="r"><span>Engineer</span></span>
+      <span class="r"><span>Builder</span></span>
+      <span class="r"><span>Swimmer</span></span>
+      <span class="r"><span>Skeptic</span></span>
+    </h2>
+    <p class="hero__desc fade" id="hero-desc" style="--dur:.52s">I build systems, then go looking for where they’re wrong. <b>Final-year CS at PES University, Bengaluru</b>, graduating 2027.</p>
+  </div>
 
-<!-- ================================================================ HERO -->
-<section class="hero">
-  <div class="wrap">
-    <div class="hero__text">
-      <div class="hero__id">
-        <p class="hero__name">Mohammed Jawwaad Sheriff</p>
-        <p class="label">Software engineer · Bengaluru · PES University, class of 2027</p>
-      </div>
-      <h1>I build systems, then I go looking for <span class="hl hl--draw">where they’re wrong.</span></h1>
-      <p class="hero__lede">I’ve written the software that points a 3.7-metre dish at satellites, caught a neural network giving the same answer to every input, and scored a speech model on all 4,056 test clips rather than a convenient sample.</p>
-      <p class="hero__avail">Final year of Computer Science. Looking for a full-time SDE, backend or ML role from 2027 — and internships before then.</p>
-      <div class="hero__actions">
-        <a class="btn" href="#findings">What I’ve caught <span aria-hidden="true">↓</span></a>
-        <a class="link-arrow" href="assets/Mohammed_Jawwaad_Sheriff_Resume.pdf">Résumé, PDF</a>
-        <a href="mailto:jawwaadsheriff@gmail.com">jawwaadsheriff@gmail.com</a>
-      </div>
-    </div>
+  <div class="hero__portrait" id="hero-portrait">
+    <figure class="liquid liquid--bare" data-liquid="30" role="img" aria-label="Portrait of Jawwaad Sheriff">
+      <img src="assets/portrait.webp" alt="" style="filter:var(--lq) grayscale(1) contrast(1.06)">
+    </figure>
+  </div>
+  <div class="hero__base"></div>
 
-    <aside class="sky" aria-labelledby="sky-title">
-      <div class="sky__head">
-        <p class="sky__title" id="sky-title">Overhead now, PES University</p>
-        <p class="sky__count" id="sky-count">Computing…</p>
-      </div>
-      <div class="sky__plot">
-        <canvas id="sky-canvas" role="img" aria-label="Polar sky plot of the ground station's tracked satellites currently above the horizon"></canvas>
-        <div class="sky__tip" id="sky-tip" hidden></div>
-      </div>
-      <div class="sky__legend" aria-hidden="true">
-        <span><i class="key key--up"></i>Trackable</span>
-        <span><i class="key key--low"></i>Up, below the floor</span>
-        <span><i class="key key--floor"></i>Under 25°: the dish won’t go</span>
-        <span><i class="key key--stop"></i>Cable stop, north</span>
-      </div>
-      <div class="passes">
-        <table>
-          <caption class="label">Next passes over the station</caption>
-          <thead><tr><th scope="col">Satellite</th><th scope="col">Rises, IST</th><th scope="col">In</th><th scope="col" class="r">Max el</th></tr></thead>
-          <tbody id="pass-rows"><tr><td colspan="4">Predicting passes…</td></tr></tbody>
-        </table>
-      </div>
-      <p class="sky__note">Positions are propagated in your browser with SGP4 from <span id="tle-age">the station’s element sets</span>. No web service is asked where these satellites are — the same rule the station dashboard follows.</p>
-    </aside>
+  <h1 class="hero__name display" aria-label="Jawwaad Sheriff">
+    <span class="line" data-letters>Jawwaad</span>
+    <span class="line" data-letters>Sheriff</span>
+  </h1>
+
+  <p class="hero__cue" id="hero-cue">Scroll to enter</p>
+</section>
+
+<!-- ================================================================ marquee -->
+<section class="marquee" aria-label="How I work">
+  <div class="marquee__track" aria-hidden="true">
+    <span class="marquee__item display">Build It</span>
+    <span class="marquee__item display">Break It</span>
+    <span class="marquee__item display">Measure It</span>
+    <span class="marquee__item display">Ship It</span>
+    <span class="marquee__item display">Check It Again</span>
+    <span class="marquee__item display">Build It</span>
+    <span class="marquee__item display">Break It</span>
+    <span class="marquee__item display">Measure It</span>
+    <span class="marquee__item display">Ship It</span>
+    <span class="marquee__item display">Check It Again</span>
   </div>
 </section>
 
-<!-- ================================================================ FINDINGS -->
-<section class="sec" id="findings" aria-labelledby="findings-h">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Findings</span>
-      <p>Six numbers. Each one changed what shipped.</p>
-    </div>
-    <div class="sec__main">
-      <h2 id="findings-h">Most of my best work started as a number that didn’t add up.</h2>
-
-      <ol class="findings">
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">191°</span><span class="finding__what">Azimuth error on one pass</span></p>
-          <p class="finding__story">The predicted pass pointed the dish almost the opposite way. Gpredict’s bundled database was still carrying a METEOR-M2 element set from 2018. Now every tracked satellite is refreshed from SatNOGS before the tracker ever sees it.</p>
-          <a class="finding__src" href="#case-station">Ground station</a>
-        </li>
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">1.000</span><span class="finding__what">Spearman, “fused” model vs. XGBoost alone</span></p>
-          <p class="finding__story">Our capstone’s multimodal model ranked every sample exactly the way its XGBoost branch did. Running the saved CNN as a black box showed why: it returned a byte-identical vector for every input it was given.</p>
-          <a class="finding__src" href="#case-wildfire">Wildfire</a>
-        </li>
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">20→56%</span><span class="finding__what">Positive rate, after one join</span></p>
-          <p class="finding__story">A left join copied each weather row once per satellite fire detection, and the headline accuracy rose with it. De-duplicated, the model scores 89.9% against an 85.0% baseline, with ROC-AUC 0.907. A smaller claim, and one I can defend.</p>
-          <a class="finding__src" href="#case-wildfire">Wildfire</a>
-        </li>
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">1 day</span><span class="finding__what">Launch-date error on two satellites</span></p>
-          <p class="finding__story">Cross-checking all 47 tracked satellites between SatNOGS and CelesTrak turned up two Chinese launches logged in Beijing time instead of UTC, and seven missing dates. Launch dates now come from CelesTrak, names and frequencies from SatNOGS, and neither is trusted outside its strength.</p>
-          <a class="finding__src" href="#case-station">Ground station</a>
-        </li>
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">0.001°</span><span class="finding__what">Agreement, three orbit calculations</span></p>
-          <p class="finding__story">The dashboard, Gpredict, and a second SGP4 implementation I wrote with the coordinate transform done by hand all land within a thousandth of a degree. Getting there meant matching the station’s coordinates to the fourth decimal place.</p>
-          <a class="finding__src" href="#case-station">Ground station</a>
-        </li>
-        <li class="finding">
-          <p class="finding__fig"><span class="hl">4,056</span><small>/4,056</small><span class="finding__what">Test clips scored</span></p>
-          <p class="finding__story">My Urdu speech model was evaluated on the entire Common Voice 17 test split, not a sample of it: 34.6% word error rate, 11.5% character error rate. The model is public, so anyone can re-run the number.</p>
-          <a class="finding__src" href="#case-asr">Urdu ASR</a>
-        </li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================ WORK -->
-<section class="sec" id="work" aria-labelledby="work-h">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Work</span>
-      <p>Five systems. For each: the problem, what I built, and what I checked.</p>
-    </div>
-    <div class="sec__main">
-      <h2 id="work-h">The work, and how I know it works.</h2>
-
-      <!-- Ground station -->
-      <article class="case" id="case-station" aria-labelledby="station-h">
-        <div class="case__kicker label"><span>Sole author</span><span>2026</span><span>Python · Skyfield/SGP4 · Hamlib · Flask · HackRF One</span></div>
-        <h3 id="station-h">PES University Ground Station</h3>
-        <p class="case__stand">Software for a 3.7-metre S-band dish: fetch the orbits, point the antenna, and put everything the operator needs on one screen.</p>
-        <div class="case__body">
-          <div class="case__text">
-            <div>
-              <h4>The problem</h4>
-              <p>The station ran on three programs that didn’t talk to each other — one for orbital data, one for pass prediction, one for the spectrum. During an eight-minute pass, the operator reconciled them in their head. And when I started, there was no rotator to test against.</p>
-            </div>
-            <div>
-              <h4>What I built</h4>
-              <p>A pipeline that pulls the SatNOGS database, matches 21 requested satellites despite inconsistent naming, and writes one element file each, plus a report of what didn’t match. A tracking engine that streams azimuth and elevation to Hamlib’s rotctld: it never commands the dish below 25°, never winds the azimuth cable through its stop at north — it flips the dish over the top instead — and pre-positions before each rise, because elevation only moves at 2° a second.</p>
-              <p style="margin-top:12px">Then a one-screen dashboard: SGP4 propagated locally for 47 satellites, a merged 72-hour pass list, Doppler retuning (about ±50 kHz across an S-band pass), and a Welch-averaged spectrum straight off a HackRF One, with the receiver’s own oscillator spike cut by 57 dB.</p>
-            </div>
-            <div>
-              <h4 class="is-checked"><span>What I checked</span></h4>
-              <p>I wrote a protocol-level rotator simulator before the controller, so the whole loop ran end to end with no hardware. (I enjoyed the simulator more than the controller.) The orbital maths agrees with Gpredict and with a hand-derived second implementation to 0.001°.</p>
-            </div>
-          </div>
-          <div class="case__side">
-            <figure class="fig">
-              <svg viewBox="0 0 340 186" role="img" aria-labelledby="mount-t">
-                <title id="mount-t">Elevation travel of the dish: minus 5 to 185 degrees, commanded only between 25 and 155</title>
-                <defs>
-                  <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                    <rect width="1.3" height="5" style="fill:var(--ink-3)"/>
-                  </pattern>
-                </defs>
-                <path d="M170,150 L280,150 A110,110 0 0 0 269.7,103.5 Z" style="fill:url(#hatch)"/>
-                <path d="M170,150 L70.3,103.5 A110,110 0 0 0 60,150 Z" style="fill:url(#hatch)"/>
-                <line x1="30" y1="150" x2="310" y2="150" style="stroke:var(--ink-2);stroke-width:1"/>
-                <path d="M279.6,159.6 A110,110 0 1 0 60.4,159.6" style="fill:none;stroke:var(--rule-strong);stroke-width:1.5;stroke-dasharray:3 3"/>
-                <path d="M269.7,103.5 A110,110 0 0 0 70.3,103.5" style="fill:none;stroke:var(--ink);stroke-width:4"/>
-                <line x1="170" y1="150" x2="205" y2="89.4" style="stroke:var(--ink);stroke-width:1.5"/>
-                <path d="M187.7,79.4 Q200,98.1 222.3,99.4" style="fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round"/>
-                <line x1="205" y1="89.4" x2="214" y2="73.8" style="stroke:var(--ink);stroke-width:1;stroke-dasharray:2 2"/>
-                <circle cx="170" cy="150" r="3.5" style="fill:var(--ink)"/>
-                <text x="170" y="28" text-anchor="middle" style="fill:var(--ink);font-size:9px">ZENITH 90°</text>
-                <text x="284" y="100" style="fill:var(--ink);font-size:9px">25°</text>
-                <text x="284" y="111" style="fill:var(--ink-2);font-size:8px">FLOOR</text>
-                <text x="56" y="100" text-anchor="end" style="fill:var(--ink);font-size:9px">155°</text>
-                <text x="56" y="111" text-anchor="end" style="fill:var(--ink-2);font-size:8px">FLOOR</text>
-                <text x="284" y="172" style="fill:var(--ink-3);font-size:8px">−5°</text>
-                <text x="56" y="172" text-anchor="end" style="fill:var(--ink-3);font-size:8px">185°</text>
-                <text x="236" y="114" text-anchor="middle" style="fill:var(--ink-2);font-size:8px">NORMAL</text>
-                <text x="118" y="114" text-anchor="middle" style="fill:var(--ink-2);font-size:8px">FLIPPED</text>
-                <text x="170" y="170" text-anchor="middle" style="fill:var(--ink-3);font-size:8px">HORIZON</text>
-              </svg>
-              <figcaption>The elevation axis travels past zenith to 185°. A pass that crosses north is flown flipped — azimuth + 180°, elevation 180° − el — so it never touches the cable stop, and the 25° floor holds on both sides.</figcaption>
-            </figure>
-            <dl class="spec">
-              <dt>Dish</dt><dd>3.7 m, S-band</dd>
-              <dt>Feed</dt><dd>2200–2300 MHz</dd>
-              <dt>Beamwidth</dt><dd>≈ 2.5°</dd>
-              <dt>Slew, az / el</dt><dd>10°/s / 2°/s</dd>
-              <dt>Receiver</dt><dd>HackRF One, direct</dd>
-            </dl>
-            <div class="case__links">
-              <a href="https://github.com/mansdone/satellite-ground-station-automation">Code on GitHub ↗</a>
-            </div>
-          </div>
-        </div>
-        <p class="footnote"><b>Sindhu Netra,</b> PES University’s own satellite, re-entered in December 2023. It’s still on the dashboard’s list — in an archive mode that shows its orbital history from Space-Track, rather than inventing a live position it no longer has.</p>
-      </article>
-
-      <!-- Wildfire -->
-      <article class="case" id="case-wildfire" aria-labelledby="wildfire-h">
-        <div class="case__kicker label"><span>Team of four</span><span>Final-year capstone, 2026</span><span>Python · Pandas · PyTorch · XGBoost</span></div>
-        <h3 id="wildfire-h">Wildfire Detection &amp; Prevention</h3>
-        <p class="case__stand">Daily fire risk for the Karnataka–Kerala–Tamil Nadu forest belt, from six years of NASA climate data and satellite fire detections.</p>
-        <div class="case__body">
-          <div class="case__text">
-            <div>
-              <h4>My part</h4>
-              <p>The upstream risk features, the hotspot heatmaps and Top-5 output, and blind-test validation of the finished model.</p>
-            </div>
-            <div>
-              <h4>What I built</h4>
-              <p>Five NASA POWER variables — humidity, rainfall, soil moisture, wind speed and direction — merged into one 99,954-row table on latitude, longitude and day of year. 119,623 raw VIIRS fire detections turned into 104,374 clean labels, snapped onto the 0.5° × 0.625° climate grid so fires and weather actually line up. Then I replaced min-max risk scores with fire behaviour: a sigmoid on humidity for flashover, wind scaled quadratically, a hinge at the soil wilting point, and a cut-off after heavy rain.</p>
-            </div>
-            <div>
-              <h4 class="is-checked"><span>What I checked</span></h4>
-              <p>Validation was mine, so I ran the saved models as black boxes. The CNN returned the same vector for every input, and 94% of its inputs were all-zero patches — only 4 of 54 grid cells fell inside the terrain rasters. A left join had lifted the positive rate from 20% to 56%. I re-measured on clean data and brought the team numbers that hold up.</p>
-            </div>
-          </div>
-          <div class="case__side">
-            <figure class="fig">
-              <div class="bars" role="img" aria-label="Accuracy 0.899 against an always-no-fire baseline of 0.850; ROC-AUC 0.907 against chance 0.5; PR-AUC 0.686 against a base rate of 0.15">
-                <div class="bars__row">
-                  <div class="bars__top"><span>Accuracy</span><b class="num">0.899</b></div>
-                  <div class="bars__track"><div class="bars__fill" style="width:89.9%"></div><div class="bars__base bars__base--r" style="left:85%" data-l="always “no fire” 0.850"></div></div>
-                </div>
-                <div class="bars__row">
-                  <div class="bars__top"><span>ROC-AUC</span><b class="num">0.907</b></div>
-                  <div class="bars__track"><div class="bars__fill" style="width:90.7%"></div><div class="bars__base" style="left:50%" data-l="chance 0.5"></div></div>
-                </div>
-                <div class="bars__row">
-                  <div class="bars__top"><span>PR-AUC</span><b class="num">0.686</b></div>
-                  <div class="bars__track"><div class="bars__fill" style="width:68.6%"></div><div class="bars__base" style="left:15%" data-l="base rate 0.15"></div></div>
-                </div>
-              </div>
-              <figcaption>Each bar on a 0–1 scale; the dashed line is what you’d get with no model. With a 15% fire rate, accuracy flatters anything — PR-AUC is the number I’d defend.</figcaption>
-            </figure>
-            <dl class="spec">
-              <dt>Climate table</dt><dd class="num">99,954 rows</dd>
-              <dt>Fire labels</dt><dd class="num">104,374 of 119,623</dd>
-              <dt>Grid</dt><dd>0.5° × 0.625°</dd>
-              <dt>Span</dt><dd>6 years, daily</dd>
-            </dl>
-            <div class="case__links">
-              <a href="https://github.com/mansdone/forest-fire-risk-prediction">Risk-feature scripts ↗</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Urdu ASR -->
-      <article class="case" id="case-asr" aria-labelledby="asr-h">
-        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>PyTorch · Hugging Face Transformers · CTC</span></div>
-        <h3 id="asr-h">Urdu Speech Recognition</h3>
-        <p class="case__stand">Fine-tuning a 300-million-parameter speech model to transcribe Urdu, on a free GPU that switches off after twelve hours.</p>
-        <div class="case__body">
-          <div class="case__text">
-            <div>
-              <h4>What I built</h4>
-              <p>wav2vec2-xls-r-300m with a CTC head, trained on Common Voice 17 Urdu. Mozilla had emptied the official dataset repositories in October 2025, so the pipeline runs off a community mirror. The model is on Hugging Face with a Gradio demo anyone can talk to.</p>
-            </div>
-            <div>
-              <h4 class="is-checked"><span>What I checked</span></h4>
-              <p>The first runs never finished. Tracing where the twelve hours went showed that full-test-set evaluation every 400 steps was eating most of it — and that Kaggle’s P100 wasn’t supported by the installed PyTorch at all. Dual T4s and rationed evaluation got a usable checkpoint at step 6,400, which I then scored on every one of the 4,056 test clips.</p>
-            </div>
-          </div>
-          <div class="case__side">
-            <figure class="fig">
-              <p class="label" style="margin-bottom:26px">Planned schedule, completed before the cut-off</p>
-              <div class="budget__track" role="img" aria-label="72 percent of the planned training schedule completed when the 12-hour session ended, at step 6,400">
-                <div class="budget__fill"></div>
-                <div class="budget__cap"></div>
-              </div>
-              <div class="budget__axis"><span>0%</span><span>100%</span></div>
-              <div class="budget__marks">
-                <div><span class="label">Word error</span><b>34.6%</b></div>
-                <div><span class="label">Character error</span><b>11.5%</b></div>
-              </div>
-              <figcaption>The session ended 72% of the way through the plan. Scored on the full test split: 4,056 of 4,056 clips.</figcaption>
-            </figure>
-            <div class="case__links">
-              <a href="https://huggingface.co/mansdone/wav2vec2-xls-r-300m-urdu">Model on Hugging Face ↗</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- ASCEND -->
-      <article class="case" id="case-ascend" aria-labelledby="ascend-h">
-        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>Next.js 16 · TypeScript · Prisma · Postgres</span></div>
-        <h3 id="ascend-h">ASCEND</h3>
-        <p class="case__stand">A productivity app my friends actually use: planner, calendar, workout log, focus timer, habit streaks, and a way to compare weeks with each other.</p>
-        <div class="case__body">
-          <div class="case__text">
-            <div>
-              <h4>What I built</h4>
-              <p>Next.js 16 and React 19 on an 11-model Prisma schema over Neon Postgres, NextAuth for sessions, deployed on Vercel. About eight people use it, and their first week of feedback rewrote the gym logger — free-text exercises instead of the 30-item library I’d assumed they wanted.</p>
-            </div>
-            <div>
-              <h4 class="is-checked"><span>What I checked</span></h4>
-              <p>Before opening it to anyone, I attacked my own API. Every route, every cross-user request, every form field. The list on the right is what passed.</p>
-            </div>
-          </div>
-          <div class="case__side">
-            <ul class="checks" aria-label="Security checks, all passing">
-              <li><span>No session → 401 on every route</span><span class="ok">PASS</span></li>
-              <li><span>Another user’s record → 404, not 403</span><span class="ok">PASS</span></li>
-              <li><span>SQL injection → parameterised</span><span class="ok">PASS</span></li>
-              <li><span>Unknown fields → stripped by schema</span><span class="ok">PASS</span></li>
-              <li><span>Script in input → escaped</span><span class="ok">PASS</span></li>
-              <li><span>Passwords → bcrypt</span><span class="ok">PASS</span></li>
-              <li><span>Cookie → HttpOnly, Secure, SameSite</span><span class="ok">PASS</span></li>
-              <li><span>Repeated attempts → 429</span><span class="ok">PASS</span></li>
-              <li><span>Security headers set</span><span class="ok">PASS</span></li>
-            </ul>
-            <div class="case__links">
-              <a href="https://ascend-eight-eta.vercel.app">Live app ↗</a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Job Hunt Command Center -->
-      <article class="case" id="case-jobs" aria-labelledby="jobs-h">
-        <div class="case__kicker label"><span>Solo</span><span>2026</span><span>FastAPI · SQLAlchemy · SQLite · APScheduler</span></div>
-        <h3 id="jobs-h">Job Hunt Command Center</h3>
-        <p class="case__stand">If I applied for a role at your company, this is probably how I found it.</p>
-        <div class="case__body">
-          <div class="case__text">
-            <div>
-              <h4>What I built</h4>
-              <p>A scheduled crawler over 166 verified public applicant-tracking boards — about 13,000 postings a run — that scores each role against my profile and prepares the application. Deduplication had to learn that one job description posted in two cities is two jobs, not one.</p>
-            </div>
-            <div>
-              <h4 class="is-checked"><span>What I checked</span></h4>
-              <p>The line it won’t cross is written as a test, not a promise. It fills forms in; it never submits them. Some questions are never answered by a machine, and any profile field I haven’t confirmed is refused rather than guessed.</p>
-            </div>
-          </div>
-          <div class="case__side">
-            <div class="rulebox">
-              <p class="big">Prefill: yes.<br>Submit: never.</p>
-              <p>Never machine-answered: work authorisation, citizenship, disability, attestations.</p>
-              <p>Profile field = UNKNOWN → refuse. Don’t guess.</p>
-            </div>
-            <dl class="spec">
-              <dt>Boards</dt><dd class="num">166, public ATS only</dd>
-              <dt>Postings / run</dt><dd class="num">≈ 13,000</dd>
-              <dt>Scraped</dt><dd>No LinkedIn, Naukri, Indeed</dd>
-            </dl>
-          </div>
-        </div>
-      </article>
-
-      <!-- Also built -->
-      <div class="also" aria-label="Other projects">
-        <div class="also__row">
-          <h3>Crime Risk Prediction</h3>
-          <p>Three government datasets disagreed on how to spell India’s states — 39, 29 and 39 records. Regex cleaning and an alias map brought them to 28 clean matches, then a Random Forest with stratified 3-fold cross-validation, shipped as a Streamlit app.</p>
-          <p class="label">Pandas · scikit-learn · Streamlit<br><a href="https://github.com/mansdone/crime-risk-prediction">GitHub ↗</a></p>
-        </div>
-        <div class="also__row">
-          <h3>Data Quality Platform</h3>
-          <p>Raw Excel in, live charts and a written report out, for people who don’t code. Levenshtein matching merged near-duplicate names and cut duplicate rows by about 30%.</p>
-          <p class="label">React · Node · Pandas · Chart.js</p>
-        </div>
-        <div class="also__row">
-          <h3>Hostel Management</h3>
-          <p>A booking marks the room occupied and writes the booking row — both or neither, in one transaction with rollback on either failure. Later rebuilt in Spring Boot to see what the ORM does underneath.</p>
-          <p class="label">Node · Express · MySQL · Spring Boot</p>
-        </div>
-        <div class="also__row">
-          <h3>MediBot</h3>
-          <p>An autonomous delivery robot for a hospital floor: six rooms, SLAM mapping, and a delivery queue that knows which request is urgent. Team project.</p>
-          <p class="label">ROS2 Humble · Nav2 · SLAM Toolbox<br><a href="https://github.com/abhinow03/Autonomus_indoor_navigation">GitHub ↗</a></p>
-        </div>
-        <div class="also__row">
-          <h3>Research Evaluation Automation</h3>
-          <p>Batch-generated the evaluation documents people had been filling in by hand — roughly 80% of the paperwork gone.</p>
-          <p class="label">React · DOCX.js</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================ LOG -->
-<section class="sec" id="log" aria-labelledby="log-h">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Log</span>
-      <p>In order, including the parts that aren’t code.</p>
-    </div>
-    <div class="sec__main">
-      <h2 id="log-h">Where I’ve been.</h2>
-      <ol class="log">
-        <li>
-          <time>Before PES</time>
-          <div><p>State-level swimmer, and captain of my school’s swim team.</p></div>
-        </li>
-        <li>
-          <time datetime="2023-08">2023 · Aug</time>
-          <div><p>Started a B.Tech in Computer Science &amp; Engineering at PES University, Bengaluru.</p></div>
-        </li>
-        <li>
-          <time datetime="2024">2024</time>
-          <div>
-            <p>Founded PES University’s first Clash Royale campus tournament, and ran it — logistics, scheduling, and live operations on the day. Core logistics for Samarpana ’24; student and industry volunteer at TAMS.</p>
-            <p>Shortlisted finalist at the C-HEAL Hackathon, pitching a healthcare prototype to industry mentors. Competed in HealthHack 3.0.</p>
-          </div>
-        </li>
-        <li>
-          <time datetime="2025-07">2025 · Jul–Aug</time>
-          <div>
-            <p class="role">Software Development Intern, Ryzklytix Consulting Solutions</p>
-            <p>Client-facing React and Node features, shipped against real delivery deadlines, through code review, sprint planning and deployment. The first time someone else depended on my code by a fixed date.</p>
-            <blockquote>Having senior engineers pull apart my pull requests is the fastest I’ve improved at anything.</blockquote>
-          </div>
-        </li>
-        <li>
-          <time datetime="2026">2026</time>
-          <div>
-            <p>The ground station software: the TLE pipeline, then the tracker, then the dashboard. ASCEND goes live in July. In August, the Urdu model reaches 34.6% WER, the Job Hunt Command Center starts its daily runs, and I audit the capstone.</p>
-          </div>
-        </li>
-        <li class="is-next">
-          <time datetime="2027-06">2027 · Jun</time>
-          <div><p>Graduate. The next line in this log is the team I join.</p></div>
-        </li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================ EVIDENCE -->
-<section class="sec" id="evidence" aria-labelledby="evidence-h">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Evidence</span>
-      <p>If a skill isn’t on this grid, I don’t claim it.</p>
-    </div>
-    <div class="sec__main">
-      <h2 id="evidence-h">Every skill, and where I actually used it.</h2>
-      <div class="grid-scroll">
-        <table class="evidence">
-          <thead id="ev-head"></thead>
-          <tbody id="ev-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================ CONTACT -->
-<section class="sec contact" id="contact" aria-labelledby="contact-h">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Contact</span>
-      <p>Bengaluru, IST (UTC+5:30).</p>
-    </div>
-    <div class="sec__main">
-      <h2 id="contact-h">I’m looking for my first full-time role.</h2>
-      <p class="sec__intro">SDE, backend, full-stack, ML or data — in Bengaluru, Hyderabad, Pune or remote, and happy to relocate. Graduating June 2027; open to internships before then. The fastest way to reach me:</p>
-      <a class="contact__mail" href="mailto:jawwaadsheriff@gmail.com">jawwaadsheriff@gmail.com</a>
-      <div class="contact__links">
-        <a href="https://linkedin.com/in/md-jawwaad-sheriff">LinkedIn ↗</a>
-        <a href="https://github.com/mansdone">GitHub ↗</a>
-        <a href="https://huggingface.co/mansdone">Hugging Face ↗</a>
-        <a href="assets/Mohammed_Jawwaad_Sheriff_Resume.pdf">Résumé, PDF</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- ================================================================ FOOTER -->
-<footer class="foot">
-  <div class="wrap">
-    <div class="sec__margin">
-      <span class="label">Signature</span>
-      <p>Me, as a two-line element set.</p>
-    </div>
+<!-- ================================================================ story -->
+<section class="section" id="story">
+  <div class="story">
     <div>
-      <div class="tle"><pre id="tle" aria-describedby="tle-decode"></pre></div>
-      <p class="tle__decode" id="tle-decode" aria-live="polite">Hover or tab through a field to decode it. The format is real, and so are the checksums.</p>
-      <div class="tle__verify">
-        <button type="button" id="tle-verify">Verify checksums</button>
-        <span id="tle-result"></span>
-      </div>
-      <div class="colophon">
-        <span>© 2026 Mohammed Jawwaad Sheriff</span>
-        <span>Hand-written HTML, CSS and JavaScript. One library: satellite.js, for SGP4.</span>
-        <span>No analytics, no trackers.</span>
+      <p class="eyebrow">The Story</p>
+      <h2 class="h-sec h-sec--big display" data-split style="max-width:16ch">Trust the output. Then check it.</h2>
+      <p class="story__body fade" data-reveal style="--dur:.52s">I’ve pointed a 3.7-metre dish at satellites, shipped an app my friends use every day, and audited machine-learning pipelines until the numbers held up.</p>
+    </div>
+    <div class="story__right">
+      <ul class="principles">
+        <li class="fade" data-reveal style="--dur:.56s;--d:0ms"><span class="n">01</span><div><h3>Test before you trust</h3><p>I wrote the rotator simulator before the controller. The hardware didn’t exist yet.</p></div></li>
+        <li class="fade" data-reveal style="--dur:.56s;--d:90ms"><span class="n">02</span><div><h3>Measure all of it</h3><p>4,056 of 4,056 test clips. Not a convenient sample.</p></div></li>
+        <li class="fade" data-reveal style="--dur:.56s;--d:180ms"><span class="n">03</span><div><h3>Ship honest numbers</h3><p>A smaller claim I can defend beats a bigger one I can’t.</p></div></li>
+        <li class="fade" data-reveal style="--dur:.56s;--d:270ms"><span class="n">04</span><div><h3>Draw the line in code</h3><p>My job-hunt bot fills in forms and never submits them. That rule is a test, not a promise.</p></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ work -->
+<section class="section" id="work">
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Selected Work</p>
+      <h2 class="h-sec h-sec--big display" data-split style="max-width:14ch">Things I built, then broke.</h2>
+    </div>
+    <p class="label">04 / Projects</p>
+  </div>
+  <ul class="work">
+    <li class="fade" data-reveal style="--y:60px;--dur:.62s">
+      <a class="card" href="https://github.com/mansdone/satellite-ground-station-automation" target="_blank" rel="noreferrer noopener">
+        <figure class="liquid" data-liquid="28" role="img" aria-label="Satellite pass tracks over the PES ground station"><img src="assets/station.webp" alt="" loading="lazy"></figure>
+        <div class="card__row">
+          <div><h3>Ground Station</h3><p class="card__blurb">Points a 3.7 m S-band dish at satellites and puts every pass on one screen.</p></div>
+          <div class="card__meta"><p class="card__year">2026</p><p class="card__out">Verified to 0.001°</p></div>
+        </div>
+        <p class="card__cat label">Satellites &amp; RF · Python</p>
+      </a>
+    </li>
+    <li class="fade" data-reveal style="--y:60px;--dur:.62s;--d:120ms">
+      <a class="card" href="https://github.com/mansdone/forest-fire-risk-prediction" target="_blank" rel="noreferrer noopener">
+        <figure class="liquid" data-liquid="28" role="img" aria-label="Map of NASA FIRMS fire detections across Karnataka, Kerala and Tamil Nadu"><img src="assets/wildfire.webp" alt="" loading="lazy"></figure>
+        <div class="card__row">
+          <div><h3>Wildfire Risk</h3><p class="card__blurb">Daily fire risk for three states, from six years of NASA climate and fire data.</p></div>
+          <div class="card__meta"><p class="card__year">2026</p><p class="card__out">ROC-AUC 0.907</p></div>
+        </div>
+        <p class="card__cat label">Geospatial ML · Capstone</p>
+      </a>
+    </li>
+    <li class="fade" data-reveal style="--y:60px;--dur:.62s">
+      <a class="card" href="https://huggingface.co/mansdone/wav2vec2-xls-r-300m-urdu" target="_blank" rel="noreferrer noopener">
+        <figure class="liquid" data-liquid="28" role="img" aria-label="Speech spectrogram"><img src="assets/asr.webp" alt="" loading="lazy"></figure>
+        <div class="card__row">
+          <div><h3>Urdu Speech Recognition</h3><p class="card__blurb">A 300M-parameter speech model, fine-tuned inside a 12-hour free-GPU limit.</p></div>
+          <div class="card__meta"><p class="card__year">2026</p><p class="card__out">34.6% WER</p></div>
+        </div>
+        <p class="card__cat label">Deep Learning · PyTorch</p>
+      </a>
+    </li>
+    <li class="fade" data-reveal style="--y:60px;--dur:.62s;--d:120ms">
+      <a class="card" href="https://ascend-eight-eta.vercel.app" target="_blank" rel="noreferrer noopener">
+        <figure class="liquid" data-liquid="28" role="img" aria-label="Habit streak heatmap from ASCEND"><img src="assets/ascend.webp" alt="" loading="lazy"></figure>
+        <div class="card__row">
+          <div><h3>ASCEND</h3><p class="card__blurb">A productivity app my friends use daily, pen-tested before launch.</p></div>
+          <div class="card__meta"><p class="card__year">2026</p><p class="card__out">Live</p></div>
+        </div>
+        <p class="card__cat label">Full-Stack · Next.js</p>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<!-- ================================================================ numbers -->
+<section class="section" id="numbers">
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">By The Numbers</p>
+      <h2 class="h-sec display" data-split>Measured, not claimed.</h2>
+    </div>
+  </div>
+  <dl class="stats">
+    <div class="stat fade" data-reveal style="--dur:.56s;--d:0ms"><dt>Satellites on the station’s watch list</dt><dd class="display">47</dd></div>
+    <div class="stat fade" data-reveal style="--dur:.56s;--d:110ms"><dt>Fire detections cleaned into labels</dt><dd class="display">104,374</dd></div>
+    <div class="stat fade" data-reveal style="--dur:.56s;--d:220ms"><dt>Test clips scored. Every one.</dt><dd class="display">4,056</dd></div>
+    <div class="stat fade" data-reveal style="--dur:.56s;--d:330ms"><dt>Agreement with Gpredict</dt><dd class="display">0.001°</dd></div>
+  </dl>
+</section>
+
+<!-- ================================================================ findings -->
+<section class="section" id="findings">
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Findings</p>
+      <h2 class="h-sec display" data-split>What I caught.</h2>
+    </div>
+  </div>
+  <div class="voices">
+    <ul class="voices__list" id="voice-list"></ul>
+    <div class="voices__panel">
+      <blockquote class="voices__quote" aria-live="polite">
+        <p id="voice-quote"></p>
+        <footer id="voice-cite"></footer>
+      </blockquote>
+      <div class="voices__pic" id="voice-pic" data-reveal-self>
+        <figure class="liquid" data-liquid="22" role="img" id="voice-fig"><img id="voice-img" src="assets/station.webp" alt="" loading="lazy"></figure>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ================================================================ contact -->
+<footer class="contact" id="contact">
+  <p class="eyebrow">Let’s Build</p>
+  <h2 class="h-sec display" data-split>Need someone who checks the numbers?</h2>
+  <p class="contact__lead fade" data-reveal>Graduating June 2027. Open to SDE, backend and ML roles, and to internships before then.</p>
+  <a class="mail" href="mailto:jawwaadsheriff@gmail.com"><span>jawwaadsheriff@gmail.com</span><span aria-hidden="true">↗</span></a>
+
+  <div class="foot">
+    <div>
+      <p class="foot__sig display">Jawwaad Sheriff</p>
+      <p class="label" style="margin-top:1rem">Built, then checked.</p>
+    </div>
+    <nav aria-label="Social">
+      <ul>
+        <li><a href="https://linkedin.com/in/md-jawwaad-sheriff" target="_blank" rel="noreferrer noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/mansdone" target="_blank" rel="noreferrer noopener">GitHub</a></li>
+        <li><a href="https://huggingface.co/mansdone" target="_blank" rel="noreferrer noopener">Hugging Face</a></li>
+        <li><a href="assets/Mohammed_Jawwaad_Sheriff_Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
+      </ul>
+    </nav>
+    <p class="foot__copy">© <span id="year">2026</span> Mohammed Jawwaad Sheriff.<br>Bengaluru, India.</p>
   </div>
 </footer>
+</main>
 
-<script src="js/tles.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/5.0.0/satellite.min.js" defer></script>
-<script src="js/sky.js" defer></script>
-<script src="js/main.js" defer></script>
+<script>
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canHover = matchMedia("(hover: hover) and (min-width: 769px)").matches;
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ------------------------------------------------------------ adaptive grid above 1920 */
+  var FONT_BASE = 16, BASE_W = 1920, COEF = 0.6666;
+  function applyAdaptiveGrid() {
+    var w = window.innerWidth;
+    var reduction = ((BASE_W - w) / BASE_W) * 100 * COEF;
+    var size = FONT_BASE - (FONT_BASE * reduction) / 100;
+    if (size > FONT_BASE) document.documentElement.style.fontSize = size + "px";
+    else document.documentElement.style.removeProperty("font-size");
+  }
+  applyAdaptiveGrid();
+  addEventListener("resize", applyAdaptiveGrid);
+
+  /* ------------------------------------------------------------ springs (for the liquid hover) */
+  var active = new Set(), running = false, last = 0;
+  function Spring(v, tension, friction, cb) { this.v = v; this.t = v; this.vel = 0; this.k = tension; this.c = friction; this.cb = cb; }
+  Spring.prototype.to = function (t) { this.t = t; active.add(this); if (!running) { running = true; last = performance.now(); requestAnimationFrame(tick); } };
+  function tick(now) {
+    var dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+    active.forEach(function (s) {
+      for (var i = 0; i < 4; i++) { var a = -s.k * (s.v - s.t) - s.c * s.vel; s.vel += a * dt / 4; s.v += s.vel * dt / 4; }
+      if (Math.abs(s.vel) < 1e-3 && Math.abs(s.v - s.t) < 1e-3) { s.v = s.t; s.vel = 0; active.delete(s); }
+      s.cb(s.v);
+    });
+    if (active.size) requestAnimationFrame(tick); else running = false;
+  }
+
+  /* ------------------------------------------------------------ liquid images */
+  var lqId = 0;
+  document.querySelectorAll("[data-liquid]").forEach(function (fig) {
+    var max = +fig.dataset.liquid, id = "lq" + (++lqId), bare = fig.classList.contains("liquid--bare");
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg"); svg.setAttribute("class", "liquid__defs"); svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = '<filter id="' + id + '" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/></filter>';
+    fig.prepend(svg);
+    var turb = svg.querySelector("feTurbulence"), disp = svg.querySelector("feDisplacementMap");
+    var img = fig.querySelector("img");
+    img.style.setProperty("--lq", "url(#" + id + ")");
+    if (!img.style.filter) img.style.filter = "url(#" + id + ")";
+    var veil, glow;
+    if (!bare) {
+      var ph = document.createElement("span"); ph.className = "liquid__ph"; fig.insertBefore(ph, img);
+      veil = document.createElement("span"); veil.className = "liquid__veil";
+      glow = document.createElement("span"); glow.className = "liquid__glow";
+      var vig = document.createElement("span"); vig.className = "liquid__vig";
+      fig.append(veil, glow, vig);
+    }
+    if (!canHover || reduce) return;
+    var wobble = new Spring(0, 140, 13, function (p) {
+      disp.setAttribute("scale", (1 + p * (max - 1)).toFixed(2));
+      turb.setAttribute("baseFrequency", Math.max(0.001, 0.009 + p * 0.013).toFixed(4));
+    });
+    var reveal = bare ? null : new Spring(0, 220, 26, function (p) {
+      veil.style.opacity = (0.88 * (1 - p)).toFixed(3);
+      glow.style.opacity = Math.max(0, p).toFixed(3);
+    });
+    var host = fig.closest(".card") || fig;
+    host.addEventListener("pointerenter", function () { wobble.to(1); if (reveal) reveal.to(1); });
+    host.addEventListener("pointerleave", function () { wobble.to(0); if (reveal) reveal.to(0); });
+  });
+
+  /* ------------------------------------------------------------ text splitting */
+  function splitLetters(line) {
+    var text = line.textContent.trim(); line.textContent = "";
+    text.split("").forEach(function (c, i) {
+      var o = document.createElement("span"); o.className = "ch";
+      var n = document.createElement("span"); n.textContent = c; n.style.setProperty("--d", i * 52 + "ms");
+      o.appendChild(n); line.appendChild(o);
+    });
+  }
+  function splitWords(el) {
+    var words = el.textContent.trim().split(/\s+/); el.textContent = "";
+    words.forEach(function (w, i) {
+      var o = document.createElement("span"); o.className = "w";
+      var n = document.createElement("span"); n.textContent = w;
+      o.appendChild(n); el.appendChild(o);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+    });
+    lineDelays(el);
+  }
+  // words sharing a line share a delay, so the heading rises one line at a time
+  function lineDelays(el) {
+    var tops = [], ws = el.querySelectorAll(".w");
+    ws.forEach(function (w) { var t = Math.round(w.offsetTop); if (tops.indexOf(t) < 0) tops.push(t); });
+    tops.sort(function (a, b) { return a - b; });
+    ws.forEach(function (w) { w.firstChild.style.setProperty("--d", tops.indexOf(Math.round(w.offsetTop)) * 90 + "ms"); });
+  }
+  document.querySelectorAll("[data-letters]").forEach(splitLetters);
+  var splits = Array.prototype.slice.call(document.querySelectorAll("[data-split]"));
+  splits.forEach(splitWords);
+  if (document.fonts) document.fonts.ready.then(function () { splits.forEach(lineDelays); });
+  var rt; addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { splits.forEach(lineDelays); }, 150); });
+
+  /* ------------------------------------------------------------ in-view reveals (once) */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
+  }, { threshold: 0 });
+  document.querySelectorAll("[data-split], [data-reveal], [data-reveal-self]").forEach(function (el) { io.observe(el); });
+
+  /* ------------------------------------------------------------ findings (the "voices" pattern) */
+  var findings = [
+    { name: "191°", role: "Ground Station", img: "assets/station.webp", pos: "50% 50%",
+      quote: "A pass pointed the dish almost the wrong way. The cause was a 2018 orbit file hiding in Gpredict’s database." },
+    { name: "1.000", role: "Wildfire Capstone", img: "assets/wildfire.webp", pos: "62% 30%",
+      quote: "The fused model ranked every sample exactly like XGBoost alone. Its CNN was giving the same answer to every input." },
+    { name: "20 → 56%", role: "Wildfire Capstone", img: "assets/wildfire.webp", pos: "70% 75%",
+      quote: "One bad join inflated the positive rate. Once I de-duplicated it, the model still held up: ROC-AUC 0.907." },
+    { name: "4,056", role: "Urdu Speech Recognition", img: "assets/asr.webp", pos: "35% 50%",
+      quote: "Scored on the entire test set, not a sample. 34.6% word error rate, and anyone can re-run it." }
+  ];
+  var list = document.getElementById("voice-list"), quote = document.getElementById("voice-quote"),
+      cite = document.getElementById("voice-cite"), vimg = document.getElementById("voice-img"),
+      vfig = document.getElementById("voice-fig"), current = -1;
+  list.innerHTML = findings.map(function (f, i) {
+    return '<li><button type="button" data-i="' + i + '"><span class="v-idx">0' + (i + 1) + '</span>' +
+      '<span class="v-body"><span class="v-name">' + f.name + '</span><span class="v-role">' + f.role + "</span></span>" +
+      '<span class="v-rule"></span></button></li>';
+  }).join("");
+  function select(i) {
+    if (i === current) return; current = i;
+    var f = findings[i];
+    list.querySelectorAll("button").forEach(function (b) { b.parentNode.classList.toggle("is-active", +b.dataset.i === i); b.setAttribute("aria-pressed", +b.dataset.i === i); });
+    quote.textContent = "";
+    f.quote.split(" ").forEach(function (w, k, arr) {
+      var s = document.createElement("span"); s.className = "qw"; s.style.setProperty("--i", k); s.textContent = w;
+      quote.appendChild(s); if (k < arr.length - 1) quote.appendChild(document.createTextNode(" "));
+    });
+    cite.textContent = f.name + " — " + f.role;
+    vimg.src = f.img; vimg.style.objectPosition = f.pos;
+    vfig.setAttribute("aria-label", f.role + " illustration");
+  }
+  list.addEventListener("pointerover", function (e) { var b = e.target.closest("button"); if (b) select(+b.dataset.i); });
+  list.addEventListener("focusin", function (e) { var b = e.target.closest("button"); if (b) select(+b.dataset.i); });
+  list.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) select(+b.dataset.i); });
+  select(0);
+
+  /* ------------------------------------------------------------ mobile menu */
+  var burger = document.getElementById("burger"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    burger.setAttribute("aria-expanded", open); burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    menu.classList.toggle("is-open", open); menu.setAttribute("aria-hidden", !open);
+    if (window.lenis) open ? window.lenis.stop() : window.lenis.start();
+  }
+  burger.addEventListener("click", function () { setMenu(burger.getAttribute("aria-expanded") !== "true"); });
+
+  /* ------------------------------------------------------------ anchors ride the smooth scroll */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]'); if (!a) return;
+    var target = document.querySelector(a.getAttribute("href")); if (!target) return;
+    e.preventDefault();
+    if (menu.classList.contains("is-open")) setMenu(false);
+    if (window.lenis) window.lenis.scrollTo(target); else target.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+  });
+
+  /* ------------------------------------------------------------ preloader + hero sequence */
+  var pre = document.getElementById("preloader"), count = document.getElementById("count");
+  var REVEAL_DELAY = 2500;
+  function hero(delay) {
+    var lines = document.querySelectorAll(".hero__name .line");
+    setTimeout(function () { lines[0].classList.add("is-in"); document.getElementById("hero-portrait").classList.add("is-in"); }, delay);
+    setTimeout(function () { lines[1].classList.add("is-in"); }, delay + 240);
+    document.querySelectorAll(".hero__roles .r").forEach(function (r, i) { setTimeout(function () { r.classList.add("is-in"); }, delay + 200 + i * 80); });
+    setTimeout(function () { document.getElementById("hero-desc").classList.add("is-in"); }, delay + 400);
+    setTimeout(function () { document.getElementById("hero-cue").classList.add("is-in"); }, delay + 900);
+  }
+  if (reduce) { pre.remove(); window.__preloading = false; hero(0); return; }
+
+  window.__preloading = true;
+  document.documentElement.style.overflow = "hidden";
+  scrollTo(0, 0);
+  var fontsReady = document.fonts ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 900); })]) : Promise.resolve();
+  fontsReady.then(function () {
+    var t0 = performance.now();
+    hero(REVEAL_DELAY);
+    (function step(now) {
+      var p = Math.min((now - t0) / 2000, 1);
+      count.textContent = Math.round(p * 100);
+      if (p < 1) { requestAnimationFrame(step); return; }
+      pre.classList.add("is-fading");
+      setTimeout(function () {
+        pre.classList.add("is-wiped");
+        pre.addEventListener("transitionend", function done(e) {
+          if (e.target !== pre) return;
+          pre.removeEventListener("transitionend", done);
+          pre.classList.add("is-done");
+          window.__preloading = false;
+          document.documentElement.style.removeProperty("overflow");
+          if (window.lenis) window.lenis.start();
+        });
+      }, 300 + 200);
+    })(t0);
+  });
+})();
+</script>
+
+<script type="importmap">
+{ "imports": { "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.19/dist/lenis.mjs" } }
+</script>
+<script type="module">
+  import Lenis from "lenis";
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const lenis = new Lenis({ smoothWheel: true });
+    window.lenis = lenis;
+    if (window.__preloading) lenis.stop();
+    function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  }
+</script>
 </body>
 </html>
