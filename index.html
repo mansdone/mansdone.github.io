@@ -7,7 +7,7 @@
 <meta name="description" content="Mohammed Jawwaad Sheriff: software engineer in Bengaluru, final-year CS at PES University. Satellites, machine learning, and checking the numbers.">
 <meta name="theme-color" content="#07090c">
 <meta property="og:title" content="Jawwaad Sheriff">
-<meta property="og:description" content="I build systems, then go looking for where they're wrong.">
+<meta property="og:description" content="Software engineer in Bengaluru. Reliable software, from satellite tracking to machine learning.">
 <meta property="og:type" content="website">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,8 +132,12 @@ main{position:relative;width:100%;overflow-x:hidden}
 .hero__portrait.is-in{opacity:1;translate:0 0}
 @media (min-width:640px){.hero__portrait{width:52vw;height:80vh}}
 @media (min-width:1024px){.hero__portrait{width:38vw;height:84vh}}
-.hero__portrait .liquid{width:100%;height:100%;pointer-events:auto}
-.hero__portrait img{object-fit:contain;object-position:center bottom}
+.hero__portrait .media{width:100%;height:100%;pointer-events:auto}
+.hero__portrait .media>img{object-fit:contain;object-position:center bottom;filter:grayscale(1) contrast(1.05);transform-origin:50% 100%;
+  transition:filter .7s var(--expo),transform .9s var(--expo)}
+@media (hover:hover) and (min-width:769px){
+  .hero__portrait .media:hover img{filter:grayscale(0) contrast(1);transform:scale(1.025)}
+}
 .hero__base{position:absolute;inset-inline:0;bottom:0;z-index:20;height:26vh;background:linear-gradient(to bottom,transparent,#07090c);pointer-events:none}
 
 .hero__name{position:absolute;inset-inline:0;bottom:0;z-index:10;transform:translateY(6%);display:flex;flex-direction:column;align-items:center;
@@ -154,17 +158,34 @@ main{position:relative;width:100%;overflow-x:hidden}
 .hero__cue::before{content:"";width:2.5rem;height:1px;background:var(--accent)}
 .hero__cue.is-in{opacity:1}
 
-/* ---------------------------------------------------------------- liquid image */
-.liquid{position:relative;overflow:hidden;background:var(--surface)}
-.liquid--bare{background:none;overflow:visible}
-.liquid svg.liquid__defs{position:absolute;width:0;height:0}
-.liquid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.liquid__ph{position:absolute;inset:0;background:radial-gradient(130% 130% at 30% 15%,var(--surface-2),var(--background))}
-.liquid__veil{position:absolute;inset:0;background:var(--background);mix-blend-mode:color;opacity:.88;pointer-events:none}
-.liquid__glow{position:absolute;inset:0;opacity:0;pointer-events:none;
-  background:linear-gradient(120deg,transparent 30%,color-mix(in srgb,var(--accent) 35%,transparent) 50%,transparent 70%)}
-.liquid__vig{position:absolute;inset:0;pointer-events:none;
+/* ---------------------------------------------------------------- media frames
+   Hover: the image turns from muted to full colour and eases in, a thin light sweep
+   crosses it once, the corner brackets close in, and a "View project" tag slides up. */
+.media{position:relative;overflow:hidden;background:radial-gradient(130% 130% at 30% 15%,var(--surface-2),var(--background))}
+.media--bare{background:none;overflow:visible}
+.media>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .media>img,.voices__pic .media>img{filter:saturate(.25) brightness(.8);transform:scale(1.001);
+  transition:filter .6s var(--expo),transform 1.1s var(--expo)}
+.media::before{content:"";position:absolute;z-index:1;inset:0;pointer-events:none;
   background:radial-gradient(120% 120% at 50% 120%,color-mix(in srgb,#07090c 70%,transparent),transparent 60%)}
+.media--bare::before{content:none}
+.media__sweep{position:absolute;z-index:2;inset:0;pointer-events:none;transform:translateX(-120%);
+  background:linear-gradient(105deg,transparent 35%,color-mix(in srgb,var(--accent) 22%,transparent) 50%,transparent 65%)}
+.media__corner{position:absolute;z-index:2;width:1.25rem;height:1.25rem;border:0 solid var(--accent);opacity:0;pointer-events:none;
+  transition:opacity .4s ease-out,transform .6s var(--expo)}
+.media__corner--tl{top:1rem;left:1rem;border-width:1px 0 0 1px;transform:translate(-.5rem,-.5rem)}
+.media__corner--br{right:1rem;bottom:1rem;border-width:0 1px 1px 0;transform:translate(.5rem,.5rem)}
+.media__tag{position:absolute;z-index:3;left:1rem;bottom:1rem;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .85rem;border-radius:9999px;
+  background:var(--accent);color:#07090c;font-size:var(--t-eyebrow);font-weight:600;text-transform:uppercase;letter-spacing:.14em;
+  opacity:0;transform:translateY(.75rem);transition:opacity .4s ease-out,transform .5s var(--expo)}
+@media (hover:hover) and (min-width:769px){
+  .card:hover .media>img,.card:focus-visible .media>img,.voices__pic:hover .media>img{filter:none;transform:scale(1.045)}
+  .card:hover .media__sweep,.card:focus-visible .media__sweep{transform:translateX(120%);transition:transform 1.1s var(--expo)}
+  .card:hover .media__corner,.card:focus-visible .media__corner{opacity:1;transform:none}
+  .card:hover .media__tag,.card:focus-visible .media__tag{opacity:1;transform:none}
+}
+/* touch screens get the full-colour images without needing a hover */
+@media (hover:none),(max-width:768px){.card .media>img,.voices__pic .media>img{filter:none}}
 
 /* ---------------------------------------------------------------- marquee */
 .marquee{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:2rem 0}
@@ -192,7 +213,7 @@ main{position:relative;width:100%;overflow-x:hidden}
 /* ---------------------------------------------------------------- work */
 .work{margin-top:4rem;display:grid;grid-template-columns:1fr;row-gap:4rem}
 @media (min-width:768px){.work{grid-template-columns:1fr 1fr;column-gap:var(--gutter)} .work li:nth-child(even){margin-top:6rem}}
-.card .liquid{aspect-ratio:16/11;width:100%;border-radius:.125rem}
+.card .media{aspect-ratio:16/11;width:100%;border-radius:.125rem}
 .card__row{margin-top:1.5rem;border-top:1px solid var(--line);padding-top:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem}
 .card h3{font-size:var(--t-h3);line-height:1.15;font-weight:600;letter-spacing:-.01em;transition:color .5s var(--expo)}
 .card:hover h3,.card:focus-visible h3{color:var(--accent)}
@@ -238,7 +259,7 @@ main{position:relative;width:100%;overflow-x:hidden}
 .voices__pic{order:1;width:100%;opacity:0;transform:scale(1.06);transition:opacity .64s var(--expo),transform .64s var(--expo)}
 .voices__pic.is-in{opacity:1;transform:none}
 @media (min-width:640px){.voices__pic{order:2;width:16rem}}
-.voices__pic .liquid{aspect-ratio:4/5;width:100%;border-radius:.125rem}
+.voices__pic .media{aspect-ratio:4/5;width:100%;border-radius:.125rem}
 
 /* ---------------------------------------------------------------- contact */
 .contact{padding:var(--section) var(--gutter) 0}
@@ -288,7 +309,7 @@ main{position:relative;width:100%;overflow-x:hidden}
       <li><a href="#story">Story</a></li>
       <li><a href="#work">Work</a></li>
       <li><a href="#numbers">Numbers</a></li>
-      <li><a href="#findings">Findings</a></li>
+      <li><a href="#findings">Highlights</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
@@ -299,7 +320,7 @@ main{position:relative;width:100%;overflow-x:hidden}
     <li><a class="display" style="--i:0" href="#story">Story</a></li>
     <li><a class="display" style="--i:1" href="#work">Work</a></li>
     <li><a class="display" style="--i:2" href="#numbers">Numbers</a></li>
-    <li><a class="display" style="--i:3" href="#findings">Findings</a></li>
+    <li><a class="display" style="--i:3" href="#findings">Highlights</a></li>
     <li><a class="display" style="--i:4" href="#contact">Contact</a></li>
   </ul>
 </div>
@@ -308,18 +329,19 @@ main{position:relative;width:100%;overflow-x:hidden}
 <!-- ================================================================ hero -->
 <section class="hero" id="top">
   <div class="hero__top">
-    <h2 class="hero__roles display" aria-label="Engineer, Builder, Swimmer, Skeptic">
+    <h2 class="hero__roles display" aria-label="Engineer, Builder, Problem Solver, Swimmer">
       <span class="r"><span>Engineer</span></span>
       <span class="r"><span>Builder</span></span>
+      <span class="r"><span>Problem Solver</span></span>
       <span class="r"><span>Swimmer</span></span>
-      <span class="r"><span>Skeptic</span></span>
     </h2>
-    <p class="hero__desc fade" id="hero-desc" style="--dur:.52s">I build systems, then go looking for where they’re wrong. <b>Final-year CS at PES University, Bengaluru</b>, graduating 2027.</p>
+    <p class="hero__desc fade" id="hero-desc" style="--dur:.52s">I build reliable software, from satellite tracking to machine learning, and I back it with real numbers. <b>Final-year CS at PES University, Bengaluru</b>, graduating 2027.</p>
   </div>
 
   <div class="hero__portrait" id="hero-portrait">
-    <figure class="liquid liquid--bare" data-liquid="30" role="img" aria-label="Portrait of Jawwaad Sheriff">
-      <img src="assets/portrait.webp" alt="" style="filter:var(--lq) grayscale(1) contrast(1.06)">
+    <!-- YOUR PHOTO: replace assets/portrait.webp (or point src at a new file). Use a cut-out with a transparent background. -->
+    <figure class="media media--bare" role="img" aria-label="Portrait of Jawwaad Sheriff">
+      <img src="assets/portrait.webp" alt="">
     </figure>
   </div>
   <div class="hero__base"></div>
@@ -336,15 +358,15 @@ main{position:relative;width:100%;overflow-x:hidden}
 <section class="marquee" aria-label="How I work">
   <div class="marquee__track" aria-hidden="true">
     <span class="marquee__item display">Build It</span>
-    <span class="marquee__item display">Break It</span>
+    <span class="marquee__item display">Test It</span>
     <span class="marquee__item display">Measure It</span>
     <span class="marquee__item display">Ship It</span>
-    <span class="marquee__item display">Check It Again</span>
+    <span class="marquee__item display">Make It Better</span>
     <span class="marquee__item display">Build It</span>
-    <span class="marquee__item display">Break It</span>
+    <span class="marquee__item display">Test It</span>
     <span class="marquee__item display">Measure It</span>
     <span class="marquee__item display">Ship It</span>
-    <span class="marquee__item display">Check It Again</span>
+    <span class="marquee__item display">Make It Better</span>
   </div>
 </section>
 
@@ -353,15 +375,15 @@ main{position:relative;width:100%;overflow-x:hidden}
   <div class="story">
     <div>
       <p class="eyebrow">The Story</p>
-      <h2 class="h-sec h-sec--big display" data-split style="max-width:16ch">Trust the output. Then check it.</h2>
-      <p class="story__body fade" data-reveal style="--dur:.52s">I’ve pointed a 3.7-metre dish at satellites, shipped an app my friends use every day, and audited machine-learning pipelines until the numbers held up.</p>
+      <h2 class="h-sec h-sec--big display" data-split style="max-width:16ch">Build it right. Prove it works.</h2>
+      <p class="story__body fade" data-reveal style="--dur:.52s">I’ve written software that points a 3.7-metre dish at satellites, shipped an app my friends use every day, and made sure the machine-learning results I report are ones I can stand behind.</p>
     </div>
     <div class="story__right">
       <ul class="principles">
         <li class="fade" data-reveal style="--dur:.56s;--d:0ms"><span class="n">01</span><div><h3>Test before you trust</h3><p>I wrote the rotator simulator before the controller. The hardware didn’t exist yet.</p></div></li>
         <li class="fade" data-reveal style="--dur:.56s;--d:90ms"><span class="n">02</span><div><h3>Measure all of it</h3><p>4,056 of 4,056 test clips. Not a convenient sample.</p></div></li>
-        <li class="fade" data-reveal style="--dur:.56s;--d:180ms"><span class="n">03</span><div><h3>Ship honest numbers</h3><p>A smaller claim I can defend beats a bigger one I can’t.</p></div></li>
-        <li class="fade" data-reveal style="--dur:.56s;--d:270ms"><span class="n">04</span><div><h3>Draw the line in code</h3><p>My job-hunt bot fills in forms and never submits them. That rule is a test, not a promise.</p></div></li>
+        <li class="fade" data-reveal style="--dur:.56s;--d:180ms"><span class="n">03</span><div><h3>Report numbers that hold up</h3><p>Every result on this page can be re-run and checked.</p></div></li>
+        <li class="fade" data-reveal style="--dur:.56s;--d:270ms"><span class="n">04</span><div><h3>Build for real users</h3><p>ASCEND has real people on it every day, so I secured its API before anyone signed up.</p></div></li>
       </ul>
     </div>
   </div>
@@ -372,14 +394,14 @@ main{position:relative;width:100%;overflow-x:hidden}
   <div class="sec-head">
     <div>
       <p class="eyebrow">Selected Work</p>
-      <h2 class="h-sec h-sec--big display" data-split style="max-width:14ch">Things I built, then broke.</h2>
+      <h2 class="h-sec h-sec--big display" data-split style="max-width:14ch">Things I’ve built and shipped.</h2>
     </div>
     <p class="label">04 / Projects</p>
   </div>
   <ul class="work">
     <li class="fade" data-reveal style="--y:60px;--dur:.62s">
       <a class="card" href="https://github.com/mansdone/satellite-ground-station-automation" target="_blank" rel="noreferrer noopener">
-        <figure class="liquid" data-liquid="28" role="img" aria-label="Satellite pass tracks over the PES ground station"><img src="assets/station.webp" alt="" loading="lazy"></figure>
+        <figure class="media" role="img" aria-label="Satellite pass tracks over the PES ground station"><img src="assets/station.webp" alt="" loading="lazy"></figure>
         <div class="card__row">
           <div><h3>Ground Station</h3><p class="card__blurb">Points a 3.7 m S-band dish at satellites and puts every pass on one screen.</p></div>
           <div class="card__meta"><p class="card__year">2026</p><p class="card__out">Verified to 0.001°</p></div>
@@ -389,7 +411,7 @@ main{position:relative;width:100%;overflow-x:hidden}
     </li>
     <li class="fade" data-reveal style="--y:60px;--dur:.62s;--d:120ms">
       <a class="card" href="https://github.com/mansdone/forest-fire-risk-prediction" target="_blank" rel="noreferrer noopener">
-        <figure class="liquid" data-liquid="28" role="img" aria-label="Map of NASA FIRMS fire detections across Karnataka, Kerala and Tamil Nadu"><img src="assets/wildfire.webp" alt="" loading="lazy"></figure>
+        <figure class="media" role="img" aria-label="Map of NASA FIRMS fire detections across Karnataka, Kerala and Tamil Nadu"><img src="assets/wildfire.webp" alt="" loading="lazy"></figure>
         <div class="card__row">
           <div><h3>Wildfire Risk</h3><p class="card__blurb">Daily fire risk for three states, from six years of NASA climate and fire data.</p></div>
           <div class="card__meta"><p class="card__year">2026</p><p class="card__out">ROC-AUC 0.907</p></div>
@@ -399,7 +421,7 @@ main{position:relative;width:100%;overflow-x:hidden}
     </li>
     <li class="fade" data-reveal style="--y:60px;--dur:.62s">
       <a class="card" href="https://huggingface.co/mansdone/wav2vec2-xls-r-300m-urdu" target="_blank" rel="noreferrer noopener">
-        <figure class="liquid" data-liquid="28" role="img" aria-label="Speech spectrogram"><img src="assets/asr.webp" alt="" loading="lazy"></figure>
+        <figure class="media" role="img" aria-label="Speech spectrogram"><img src="assets/asr.webp" alt="" loading="lazy"></figure>
         <div class="card__row">
           <div><h3>Urdu Speech Recognition</h3><p class="card__blurb">A 300M-parameter speech model, fine-tuned inside a 12-hour free-GPU limit.</p></div>
           <div class="card__meta"><p class="card__year">2026</p><p class="card__out">34.6% WER</p></div>
@@ -409,7 +431,7 @@ main{position:relative;width:100%;overflow-x:hidden}
     </li>
     <li class="fade" data-reveal style="--y:60px;--dur:.62s;--d:120ms">
       <a class="card" href="https://ascend-eight-eta.vercel.app" target="_blank" rel="noreferrer noopener">
-        <figure class="liquid" data-liquid="28" role="img" aria-label="Habit streak heatmap from ASCEND"><img src="assets/ascend.webp" alt="" loading="lazy"></figure>
+        <figure class="media" role="img" aria-label="Habit streak heatmap from ASCEND"><img src="assets/ascend.webp" alt="" loading="lazy"></figure>
         <div class="card__row">
           <div><h3>ASCEND</h3><p class="card__blurb">A productivity app my friends use daily, pen-tested before launch.</p></div>
           <div class="card__meta"><p class="card__year">2026</p><p class="card__out">Live</p></div>
@@ -440,8 +462,8 @@ main{position:relative;width:100%;overflow-x:hidden}
 <section class="section" id="findings">
   <div class="sec-head">
     <div>
-      <p class="eyebrow">Findings</p>
-      <h2 class="h-sec display" data-split>What I caught.</h2>
+      <p class="eyebrow">Highlights</p>
+      <h2 class="h-sec display" data-split>Problems I solved.</h2>
     </div>
   </div>
   <div class="voices">
@@ -452,7 +474,7 @@ main{position:relative;width:100%;overflow-x:hidden}
         <footer id="voice-cite"></footer>
       </blockquote>
       <div class="voices__pic" id="voice-pic" data-reveal-self>
-        <figure class="liquid" data-liquid="22" role="img" id="voice-fig"><img id="voice-img" src="assets/station.webp" alt="" loading="lazy"></figure>
+        <figure class="media" role="img" id="voice-fig"><img id="voice-img" src="assets/station.webp" alt="" loading="lazy"></figure>
       </div>
     </div>
   </div>
@@ -461,14 +483,14 @@ main{position:relative;width:100%;overflow-x:hidden}
 <!-- ================================================================ contact -->
 <footer class="contact" id="contact">
   <p class="eyebrow">Let’s Build</p>
-  <h2 class="h-sec display" data-split>Need someone who checks the numbers?</h2>
+  <h2 class="h-sec display" data-split>Let’s build something that works.</h2>
   <p class="contact__lead fade" data-reveal>Graduating June 2027. Open to SDE, backend and ML roles, and to internships before then.</p>
   <a class="mail" href="mailto:jawwaadsheriff@gmail.com"><span>jawwaadsheriff@gmail.com</span><span aria-hidden="true">↗</span></a>
 
   <div class="foot">
     <div>
       <p class="foot__sig display">Jawwaad Sheriff</p>
-      <p class="label" style="margin-top:1rem">Built, then checked.</p>
+      <p class="label" style="margin-top:1rem">Designed &amp; built by me.</p>
     </div>
     <nav aria-label="Social">
       <ul>
@@ -502,53 +524,11 @@ main{position:relative;width:100%;overflow-x:hidden}
   applyAdaptiveGrid();
   addEventListener("resize", applyAdaptiveGrid);
 
-  /* ------------------------------------------------------------ springs (for the liquid hover) */
-  var active = new Set(), running = false, last = 0;
-  function Spring(v, tension, friction, cb) { this.v = v; this.t = v; this.vel = 0; this.k = tension; this.c = friction; this.cb = cb; }
-  Spring.prototype.to = function (t) { this.t = t; active.add(this); if (!running) { running = true; last = performance.now(); requestAnimationFrame(tick); } };
-  function tick(now) {
-    var dt = Math.min((now - last) / 1000, 1 / 30); last = now;
-    active.forEach(function (s) {
-      for (var i = 0; i < 4; i++) { var a = -s.k * (s.v - s.t) - s.c * s.vel; s.vel += a * dt / 4; s.v += s.vel * dt / 4; }
-      if (Math.abs(s.vel) < 1e-3 && Math.abs(s.v - s.t) < 1e-3) { s.v = s.t; s.vel = 0; active.delete(s); }
-      s.cb(s.v);
-    });
-    if (active.size) requestAnimationFrame(tick); else running = false;
-  }
-
-  /* ------------------------------------------------------------ liquid images */
-  var lqId = 0;
-  document.querySelectorAll("[data-liquid]").forEach(function (fig) {
-    var max = +fig.dataset.liquid, id = "lq" + (++lqId), bare = fig.classList.contains("liquid--bare");
-    var ns = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(ns, "svg"); svg.setAttribute("class", "liquid__defs"); svg.setAttribute("aria-hidden", "true");
-    svg.innerHTML = '<filter id="' + id + '" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" result="noise"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G"/></filter>';
-    fig.prepend(svg);
-    var turb = svg.querySelector("feTurbulence"), disp = svg.querySelector("feDisplacementMap");
-    var img = fig.querySelector("img");
-    img.style.setProperty("--lq", "url(#" + id + ")");
-    if (!img.style.filter) img.style.filter = "url(#" + id + ")";
-    var veil, glow;
-    if (!bare) {
-      var ph = document.createElement("span"); ph.className = "liquid__ph"; fig.insertBefore(ph, img);
-      veil = document.createElement("span"); veil.className = "liquid__veil";
-      glow = document.createElement("span"); glow.className = "liquid__glow";
-      var vig = document.createElement("span"); vig.className = "liquid__vig";
-      fig.append(veil, glow, vig);
-    }
-    if (!canHover || reduce) return;
-    var wobble = new Spring(0, 140, 13, function (p) {
-      disp.setAttribute("scale", (1 + p * (max - 1)).toFixed(2));
-      turb.setAttribute("baseFrequency", Math.max(0.001, 0.009 + p * 0.013).toFixed(4));
-    });
-    var reveal = bare ? null : new Spring(0, 220, 26, function (p) {
-      veil.style.opacity = (0.88 * (1 - p)).toFixed(3);
-      glow.style.opacity = Math.max(0, p).toFixed(3);
-    });
-    var host = fig.closest(".card") || fig;
-    host.addEventListener("pointerenter", function () { wobble.to(1); if (reveal) reveal.to(1); });
-    host.addEventListener("pointerleave", function () { wobble.to(0); if (reveal) reveal.to(0); });
+  /* ------------------------------------------------------------ project card hover decorations */
+  document.querySelectorAll(".card .media").forEach(function (fig) {
+    fig.insertAdjacentHTML("beforeend",
+      '<span class="media__sweep"></span><span class="media__corner media__corner--tl"></span>' +
+      '<span class="media__corner media__corner--br"></span><span class="media__tag" aria-hidden="true">View project <span>↗</span></span>');
   });
 
   /* ------------------------------------------------------------ text splitting */
@@ -591,14 +571,14 @@ main{position:relative;width:100%;overflow-x:hidden}
 
   /* ------------------------------------------------------------ findings (the "voices" pattern) */
   var findings = [
-    { name: "191°", role: "Ground Station", img: "assets/station.webp", pos: "50% 50%",
-      quote: "A pass pointed the dish almost the wrong way. The cause was a 2018 orbit file hiding in Gpredict’s database." },
-    { name: "1.000", role: "Wildfire Capstone", img: "assets/wildfire.webp", pos: "62% 30%",
-      quote: "The fused model ranked every sample exactly like XGBoost alone. Its CNN was giving the same answer to every input." },
-    { name: "20 → 56%", role: "Wildfire Capstone", img: "assets/wildfire.webp", pos: "70% 75%",
-      quote: "One bad join inflated the positive rate. Once I de-duplicated it, the model still held up: ROC-AUC 0.907." },
-    { name: "4,056", role: "Urdu Speech Recognition", img: "assets/asr.webp", pos: "35% 50%",
-      quote: "Scored on the entire test set, not a sample. 34.6% word error rate, and anyone can re-run it." }
+    { name: "191° → 0.001°", role: "Ground Station", img: "assets/station.webp", pos: "50% 50%",
+      quote: "Traced a 191° pointing error to a 2018 orbit file, automated fresh data for every satellite, and matched Gpredict to 0.001°." },
+    { name: "3 apps → 1 screen", role: "Ground Station", img: "assets/station.webp", pos: "30% 40%",
+      quote: "Operators juggled three programs during an eight-minute pass. I built one dashboard with passes, Doppler and the live spectrum together." },
+    { name: "ROC-AUC 0.907", role: "Wildfire Capstone", img: "assets/wildfire.webp", pos: "62% 30%",
+      quote: "Owned validation for our capstone: fixed a data join, cleaned the labels, and delivered a fire-risk model that holds up on clean data." },
+    { name: "4,056 clips", role: "Urdu Speech Recognition", img: "assets/asr.webp", pos: "35% 50%",
+      quote: "Fitted a 300M-parameter model into a 12-hour free GPU, then scored it on the full test set: 34.6% word error rate." }
   ];
   var list = document.getElementById("voice-list"), quote = document.getElementById("voice-quote"),
       cite = document.getElementById("voice-cite"), vimg = document.getElementById("voice-img"),

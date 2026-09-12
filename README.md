@@ -17,7 +17,7 @@ Open http://localhost:8731. Opening `index.html` directly from disk also works.
 
 | File | What it is |
 |---|---|
-| `portrait.webp` | Hero cutout. Currently cut from `Downloads\jawwaad.jpeg`, a stand-in. |
+| `portrait.webp` | Your photo in the hero, with the background removed. See **Changing your photo**. |
 | `station.webp` | Real pass tracks over the PES ground station, next 24 h, Skyfield/SGP4 |
 | `wildfire.webp` | Real NASA FIRMS MODIS fire detections, 2021-2025 |
 | `asr.webp` | Stylised spectrogram (decorative) |
@@ -29,17 +29,38 @@ Regenerate them (uses the SatelliteAutomation venv, which has Skyfield, NumPy, P
 ..\SatelliteAutomation\.venv\Scripts\python.exe tools\make_images.py
 ```
 
-### Swapping the portrait
+## Changing your photo
 
-Best result: a waist-up or chest-up photo on a plain wall. Either:
+The hero photo is **`assets/portrait.webp`**. It's used in one place,
+`index.html`, in the hero (search the file for `YOUR PHOTO`):
 
-- Remove the background yourself (Windows 11 Paint → *Remove background*, or
-  Photos → *Edit* → *Background*), save as PNG, then convert:
-  `python -c "from PIL import Image; Image.open('me.png').save('assets/portrait.webp', quality=88)"`
-- Or let the script try: `python tools\make_images.py --only none --portrait C:\path\photo.jpg`
-  (works well on light, plain walls).
+```html
+<img src="assets/portrait.webp" alt="">
+```
+
+It must be a **cut-out with a transparent background**, or the photo's own
+background shows as a box over your name. Three ways to make one:
+
+1. **Easiest, no tools:** Windows 11 Paint → open the photo → *Remove background*
+   → *Save as* PNG. Put the PNG in `assets\` and change the `src` above to its
+   name (e.g. `assets/portrait.png`).
+2. **Website:** remove.bg does the same; download the PNG.
+3. **Script (best edges on busy backgrounds):**
+   `python tools\cutout.py "C:\path\to\photo.jpg"` overwrites `assets/portrait.webp`.
+   Needs `pip install "rembg[cpu]" pillow`.
+
+Waist-up photos work best. The site pins the image to the bottom-centre of the
+screen and shows it in black and white until someone hovers over it.
 
 ## Deploy
 
-It's static: GitHub Pages, Vercel or Netlify all work by pointing at this folder.
-Not deployed yet.
+Live at **https://mansdone.github.io** (repo `mansdone/mansdone.github.io`,
+GitHub Pages from `master`). To update the live site, commit and push:
+
+```powershell
+git add -A
+git commit -m "Update photo"
+git push
+```
+
+It rebuilds in about 10 seconds.
