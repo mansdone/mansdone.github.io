@@ -7,7 +7,7 @@ is inline.
 ## Preview
 
 ```powershell
-cd "C:\Users\jawwa\OneDrive\Desktop\portfolio"
+cd "C:\Users\jawwa\OneDrive\Desktop\Projects\portfolio"
 python -m http.server 8731
 ```
 
